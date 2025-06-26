@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import userLogin from "../views/UserLogin.vue";
+import userLogin from '@/views/UserLogin.vue';
+import Home from '@/views/Home.vue';
 
 const routes = [
     {
@@ -9,7 +10,14 @@ const routes = [
         meta: {
             title: "登录",
         }
-        
+    },
+    {  
+        path: "/home",
+        name: "home",
+        component: Home,
+        meta: {
+            title: "首页",
+        }
     }
 ];
 
