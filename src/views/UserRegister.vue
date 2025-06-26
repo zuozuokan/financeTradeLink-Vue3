@@ -49,58 +49,58 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
-import { registerAPI } from '@/api/registerOrLogin.js'
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+import { registerAPI } from "@/api/registerOrLogin.js";
 
-const router = useRouter()
+const router = useRouter();
 
 const form = ref({
-  userUserName: '',
-  userPassword: '',
-  userName: '',
-  userPhone: '',
-  userRole: 'USER'
-})
+  userUserName: "",
+  userPassword: "",
+  userName: "",
+  userPhone: "",
+  userRole: "USER",
+});
 
 const rules = {
   userUserName: [
-    { required: true, message: '用户名不能为空', trigger: 'blur' },
-    { min: 3, message: '用户名至少3个字符', trigger: 'blur' }
+    { required: true, message: "用户名不能为空", trigger: "blur" },
+    { min: 3, message: "用户名至少3个字符", trigger: "blur" },
   ],
   userPassword: [
-    { required: true, message: '密码不能为空', trigger: 'blur' },
-    { min: 5, message: '密码至少5位', trigger: 'blur' }
-  ]
-}
+    { required: true, message: "密码不能为空", trigger: "blur" },
+    { min: 5, message: "密码至少5位", trigger: "blur" },
+  ],
+};
 
-const registerFormRef = ref()
+const registerFormRef = ref();
 
 const handleRegister = async () => {
   await registerFormRef.value.validate(async (valid) => {
-    if (!valid) return
+    if (!valid) return;
 
     try {
-      const response = await registerAPI(form.value)
-      const reply = response.data
+      const response = await registerAPI(form.value);
+      const reply = response.data;
 
       if (reply.code === 200) {
-        ElMessage.success('注册成功，正在跳转登录页...')
-        setTimeout(() => router.push('/user-login'), 1500)
+        ElMessage.success("注册成功，正在跳转登录页...");
+        setTimeout(() => router.push("/user-login"), 1500);
       } else {
-        ElMessage.error(reply.results || '注册失败')
+        ElMessage.error(reply.results || "注册失败");
       }
     } catch (err) {
-      ElMessage.error('网络异常，请稍后再试')
+      ElMessage.error("网络异常，请稍后再试");
     }
-  })
-}
+  });
+};
 </script>
 
 <style scoped>
 .register-container {
-  background-image: url('@/assets/images/register-background.jpg');
+  background-image: url("@/assets/images/register-background.jpg");
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -119,15 +119,13 @@ const handleRegister = async () => {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
-              0 6px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease-in-out;
 }
 
 .register-form:hover {
   transform: translateY(-4px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2),
-              0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -140,7 +138,7 @@ h2 {
 }
 
 h2::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -8px;
   left: 50%;
