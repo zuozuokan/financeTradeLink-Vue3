@@ -1,24 +1,27 @@
 <script setup>
-import {defineProps, defineEmits, ref} from 'vue';
+import { defineProps, defineEmits, ref } from "vue";
 
 const props = defineProps({
-  modelValue: String // 接收父组件传递的验证码值
+  modelValue: String, // 接收父组件传递的验证码值
 });
 
-const emit = defineEmits(['update:modelValue']); // 用于通知父组件更新值
+const emit = defineEmits(["update:modelValue"]); // 用于通知父组件更新值
 
-const captchaText = ref('');
+const captchaText = ref("");
 
 // 生成验证码
 const generateCaptcha = () => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  captchaText.value = '';
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  captchaText.value = "";
   for (let i = 0; i < 6; i++) {
-    captchaText.value += characters.charAt(Math.floor(Math.random() * characters.length));
+    captchaText.value += characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
   }
 
   // 发射事件更新父组件的验证码
-  emit('update:modelValue', captchaText.value);
+  emit("update:modelValue", captchaText.value);
 };
 
 // 页面加载时生成验证码
@@ -30,8 +33,15 @@ generateCaptcha();
     <span class="captcha-text">{{ captchaText }}</span>
     <button type="button" @click="generateCaptcha" class="refresh-btn">
       <!-- Material Design Refresh Icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-        <path d="M12 4V1l-3 3 3 3V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h2c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-4-4-4z"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+      >
+        <path
+          d="M12 4V1l-3 3 3 3V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h2c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-4-4-4z"
+        />
       </svg>
     </button>
   </div>
@@ -89,6 +99,4 @@ generateCaptcha();
   background: linear-gradient(135deg, #4b6167, #3b4d52); /* 悬浮时渐变色加深 */
   padding: 10px; /* 悬浮时增大内边距，使按钮看起来更大 */
 }
-
-
 </style>

@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,24 +11,23 @@ export default defineConfig({
 
     // 若启用网关，则用以下配置
     proxy: {
-      '/project': {
-        target: 'http://localhost:9999', // 
+      "/project": {
+        target: "http://localhost:9999", //
         changeOrigin: true, // 是否改变源
-      }
-    }
+      },
+    },
     // 若不启用网关，则使用以下配置
     // proxy: {
     //   '/api': {
     //     target: 'http://localhost:xxxxx', // xxxxx为后端微服务的端口
-    //     changeOrigin: true, 
+    //     changeOrigin: true,
     //   }
     // }
-    
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      'vue': 'vue/dist/vue.esm-bundler.js' // 使用完整版的 Vue
-    }
+      "@": path.resolve(__dirname, "./src"),
+      vue: "vue/dist/vue.esm-bundler.js", // 使用完整版的 Vue
+    },
   },
-})
+});
