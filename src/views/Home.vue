@@ -8,7 +8,6 @@ import { jwtDecode } from "jwt-decode";
 import { userGetCurrentInfoAPI } from "@/api/user";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import SideBar from "@/components/SideBar.vue"; // 引入侧边栏组件
 
 
 const router = useRouter();
