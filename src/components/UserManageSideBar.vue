@@ -5,24 +5,15 @@
     text-color="#ecf0f1"
     active-text-color="#ffd04b"
     :default-active="activeIndex"
-    router
   >
-    <!-- 专家指导 -->
-    <el-menu-item index="/user/expert-guide">
-      <el-icon><Guide /></el-icon>
-      <span>专家指导</span>
-    </el-menu-item>
-
+    
     <!-- 个人信息管理 -->
     <el-sub-menu index="1">
       <template #title>
         <el-icon><User /></el-icon>
         <span>个人信息管理</span>
       </template>
-      <el-menu-item index="/user/profile/password">修改密码</el-menu-item>
-      <el-menu-item index="/user/profile/contact">更新联系方式</el-menu-item>
-      <el-menu-item index="/user/profile/nickname">修改昵称</el-menu-item>
-      <el-menu-item index="/user/profile/address">添加收货方式</el-menu-item>
+      <el-menu-item @click="router.push('/user-info-exchange')">修改个人信息</el-menu-item>
     </el-sub-menu>
 
     <!-- 农产品管理 -->
@@ -31,11 +22,8 @@
         <el-icon><ShoppingCart /></el-icon>
         <span>农产品管理</span>
       </template>
-      <el-menu-item index="/user/product/publish">发布商品</el-menu-item>
-      <el-menu-item index="/user/product/unpublish">下架商品</el-menu-item>
-      <el-menu-item index="/user/product/list">商品列表</el-menu-item>
-      <el-menu-item index="/user/product/detail">商品详情</el-menu-item>
-      <el-menu-item index="/user/product/edit">编辑商品</el-menu-item>
+      <el-menu-item @click="router.push('/add-product')">发布商品</el-menu-item>
+      <el-menu-item @click="router.push('/product-manage')">商品管理</el-menu-item>
     </el-sub-menu>
 
     <!-- 融资管理 -->
@@ -44,9 +32,8 @@
         <el-icon><Coin /></el-icon>
         <span>融资管理</span>
       </template>
-      <el-menu-item index="/user/finance/apply">发起融资</el-menu-item>
-      <el-menu-item index="/user/finance/update">更新申请</el-menu-item>
-      <el-menu-item index="/user/finance/detail">融资详情</el-menu-item>
+      <el-menu-item @click="router.push('/add-financing')">发起融资</el-menu-item>
+      <el-menu-item @click="router.push('/financing-list')">融资列表</el-menu-item>
     </el-sub-menu>
 
     <!-- 知识内容管理 -->
@@ -55,17 +42,22 @@
         <el-icon><Notebook /></el-icon>
         <span>知识内容管理</span>
       </template>
-      <el-menu-item index="/user/knowledge/publish">发布知识</el-menu-item>
-      <el-menu-item index="/user/knowledge/list">我的知识</el-menu-item>
-      <el-menu-item index="/user/knowledge/delete">删除知识</el-menu-item>
-      <el-menu-item index="/user/knowledge/update">更新知识</el-menu-item>
+      <el-menu-item @click="router.push('/add-knowledge')">发布知识</el-menu-item>
+      <el-menu-item @click="router.push('/user-knowledge')">我的知识管理</el-menu-item>
     </el-sub-menu>
+
+    <!-- 专家指导 -->
+    <el-menu-item @click="router.push('/expert-guide')">
+      <el-icon><Guide /></el-icon>
+      <span>专家问答</span>
+    </el-menu-item>
+    
   </el-menu>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import {
   User,
   ShoppingCart,
@@ -75,6 +67,7 @@ import {
 } from '@element-plus/icons-vue';
 
 const route = useRoute();
+const router = useRouter();
 const activeIndex = ref(route.path);
 </script>
 
@@ -86,7 +79,7 @@ const activeIndex = ref(route.path);
   font-size: 15px;
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
   background: linear-gradient(to bottom, #2c3e50, #34495e);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 0 0 0;
   padding-top: 10px;
 }
 
