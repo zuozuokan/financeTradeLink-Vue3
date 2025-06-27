@@ -102,6 +102,7 @@ function animateValue(element, start, end, duration) {
 </script>
 
 <style scoped lang="scss">
+
 #content {
   display: flex;
   height: 100vh;
