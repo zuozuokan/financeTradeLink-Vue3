@@ -33,7 +33,7 @@ const routes = [
   },
   {
     path: "/user-login",
-    name: "userLoginAlt", // 确保 name 唯一
+    name: "userLogin", // 确保 name 唯一
     component: userLogin,
     meta: {
       title: "用户登录",

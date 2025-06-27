@@ -1,9 +1,8 @@
 <template>
   <div id="content">
     <UserManageSideBar />
-    <main class="main-content">
-      <router-view />
-    </main>
+    <p class="title">用户个人信息管理</p>
+
   </div>
 </template>
 
@@ -15,4 +14,5 @@ import UserManageSideBar from "@/components/UserManageSideBar.vue";
 #content {
   display: flex;
 }
+
 </style>
