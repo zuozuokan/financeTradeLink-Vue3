@@ -25,7 +25,7 @@ const routes = [
   {
     path: "/",
     name: "visitorPage",
-    component: userLogin,
+    component: VisitorPage,
     meta: {
       title: "访客页面",
       hideSidebar: true, // 隐藏侧边栏
