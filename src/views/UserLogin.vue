@@ -194,7 +194,6 @@ body {
     0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-
 h2 {
   font-size: 32px;
   color: #2c3e50;
