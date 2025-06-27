@@ -95,6 +95,7 @@ const routes = [
     component: UserManagement,
     meta: {
       title: "用户后台管理",
+      hideSidebar: true, 
     },
   },
   {

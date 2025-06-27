@@ -108,7 +108,7 @@ const goToAdminByRole = () => {
 /* 所有菜单项的字体变大 */
 .el-menu-item span,
 .el-sub-menu__title span {
-  font-size: 16px;
+  font-size: 17px;
 }
 
 /* 标题项字体更大且加粗 */
@@ -120,7 +120,7 @@ const goToAdminByRole = () => {
 #side-title {
   font-size: 20px;
   font-weight: bold;
-  color: #ffffff; /* 建议设置为白色或自定义色 */
+  color: #ffffff; 
 }
 
 .el-menu-item:hover#side-title {
