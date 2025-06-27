@@ -249,7 +249,7 @@
       </div>
       
       <div class="footer-bottom">
-        <div class="copyright">© 2023 融销通智慧农业平台. 版权所有</div>
+        <div class="copyright">© 2025 融销通智慧农业平台. 版权所有</div>
         <div class="social-links">
           <el-button circle><i class="el-icon-message"></i></el-button>
           <el-button circle><i class="el-icon-weibo"></i></el-button>
@@ -545,17 +545,17 @@ const goToLogin = () => {
       
       &.img-1 {
         background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-          url('https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=1740') center/cover;
+          url('@/assets/images/高原蓝莓.jpg') center/cover;
       }
       
       &.img-2 {
         background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-          url('https://images.unsplash.com/photo-1627687803352-0e9e65d9a8e2?auto=format&fit=crop&q=80&w=1740') center/cover;
+          url('@/assets/images/沙漠蜜瓜.jpg') center/cover;
       }
       
       &.img-3 {
         background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-          url('https://images.unsplash.com/photo-1601001815898-a3c734d20a0c?auto=format&fit=crop&q=80&w=1740') center/cover;
+          url('@/assets/images/生态草莓.jpg') center/cover;
       }
     }
     
@@ -679,12 +679,12 @@ const goToLogin = () => {
       
       &.farm-1 {
         background: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), 
-          url('https://images.unsplash.com/photo-1495107330289-3589a7e57297?auto=format&fit=crop&q=80&w=1740') center/cover;
+          url('@/assets/images/阳光生态农场.jpg') center/cover;
       }
       
       &.farm-2 {
         background: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), 
-          url('https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=1670') center/cover;
+          url('@/assets/images/青山绿水农场.jpg') center/cover;
       }
     }
     

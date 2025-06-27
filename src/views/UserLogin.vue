@@ -1,502 +1,443 @@
-<script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import Captcha from "@/components/Captcha.vue"; // 引入验证码组件
-import { ElMessage } from "element-plus";
-import { loginAPI } from "@/api/registerOrLogin.js";
-
-const router = useRouter();
-
-// 响应状态
-const message = ref("");
-const userData = ref(null); // 用于保存用户信息
-
-// 表单数据
-const account = ref("");
-const password = ref("");
-const captcha = ref("");
-const realCaptcha = ref("");
-const role = ref("USER"); // 默认选中普通用户
-
-// 处理登录
-const handleLogin = async (event) => {
-  event.preventDefault(); // 防止表单默认提交行为
-
-  // 获取表单输入的账户和密码
-  const account = event.target.account.value;
-  const password = event.target.password.value;
-  const selectedRole = role.value;
-  const captcha = event.target.captcha.value;
-
-  // 校验验证码是否正确，假设验证码是必填的且不为空
-  if (!captcha) {
-    ElMessage.error("请输入验证码");
-    return;
-  }
-
-  // 校验验证码是否正确
-  if (captcha !== realCaptcha.value) {
-    ElMessage.error("验证码错误");
-    event.target.captcha.value = ""; // 清空验证码输入框
-
-    return;
-  }
-
-  try {
-    // 向后端发送登录请求
-    const response = await loginAPI(account, password, selectedRole);
-    // 处理响应
-    const reply = response.data;
-    if (reply.code === 200) {
-      // 登录成功时，保存 token到localStorage
-      localStorage.setItem("token", reply.results);
-      ElMessage.success("登录成功");
-
-      // 登录成功，跳转到首页
-      router.push("/home");
-    } else if (reply.code === 500) {
-      event.target.password.value = "";
-      event.target.captcha.value = ""; // 清空验证码输入框
-      ElMessage.error(reply.results);
-    } else {
-      // 登录失败，显示错误信息
-      ElMessage.value("未知错误，请稍后再试");
-    }
-  } catch (error) {
-    ElMessage.value("网络错误，请稍后再试");
-  }
-};
-</script>
-
 <template>
-  <div id="container">
-    <form @submit="handleLogin">
-      <div class="container">
-        <div class="box">
-          <h2>登录</h2>
+  <div class="login-container">
+    <!-- 农业主题背景装饰元素 -->
+    <div class="decorative-bg">
+      <div class="leaf leaf-1"></div>
+      <div class="leaf leaf-2"></div>
+      <div class="leaf leaf-3"></div>
+      <div class="agri-pattern"></div>
+    </div>
+
+    <form @submit.prevent="handleLogin" class="login-form">
+      <div class="form-header">
+        <div class="logo-container">
+          <div class="agri-icon">🌱</div>
+          <h2>融销通智慧农业</h2>
+        </div>
+        <div class="welcome-text">
+          <h3>欢迎登录</h3>
+          <p>连接农业生态，开启智慧产销之旅</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-with-icon">
+          <i class="el-icon-user"></i>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="请输入用户名"
             name="account"
             v-model="account"
             required
+            class="custom-input"
           />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-with-icon">
+          <i class="el-icon-lock"></i>
           <input
             type="password"
-            placeholder="Password"
+            placeholder="请输入密码"
             name="password"
             v-model="password"
             required
+            class="custom-input"
           />
+        </div>
+      </div>
 
-          <select name="role" v-model="role" required class="role-select">
-            <option value="ADMIN">管理员</option>
-            <option value="USER">普通用户</option>
-            <option value="EXPERT">专家</option>
-            <option value="BANK">银行</option>
-          </select>
+      <div class="form-group">
+        <select name="role" v-model="role" required class="role-select">
+          <option value="ADMIN">管理员</option>
+          <option value="USER">普通用户</option>
+          <option value="EXPERT">农业专家</option>
+          <option value="BANK">金融机构</option>
+        </select>
+      </div>
 
-          <!-- 验证码输入框 -->
-          <div class="captcha-container">
-            <Captcha v-model="realCaptcha" />
-            <!-- 使用v-model绑定 realCaptcha -->
+      <div class="form-group">
+        <div class="captcha-container">
+          <Captcha v-model="realCaptcha" class="captcha-component" />
+          <div class="input-with-icon">
+            <i class="el-icon-key"></i>
             <input
               type="text"
-              placeholder="Enter Captcha"
+              placeholder="请输入验证码"
               name="captcha"
               v-model="captcha"
               required
+              class="custom-input"
             />
           </div>
-
-          <button class="log" type="submit">登录</button>
-
-          <div class="register">
-            没有账号？
-            <a @click.prevent="router.push('/user-register')">立即注册</a>
-          </div>
-
-          <br />
-          <!-- 错误提示信息 -->
-          <div
-            id="message"
-            v-if="message"
-            style="
-              color: red;
-              font-weight: bold;
-              font-size: 20px;
-              text-align: center;
-            "
-          >
-            {{ message }}
-          </div>
         </div>
+      </div>
+
+      <button type="submit" class="login-btn">登 录</button>
+
+      <div class="form-footer">
+        <div class="register-link">
+          还没有账号？
+          <a @click.prevent="router.push('/user-register')">立即注册</a>
+        </div>
+      </div>
+
+      <div class="error-message" v-if="message">
+        {{ message }}
       </div>
     </form>
   </div>
 </template>
 
-<style scoped>
-/* 背景设置 */
-#container {
-  background-image: url("../assets/images/login_background.jpg");
-  background-size: cover;
-  background-position: center;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* 禁止滚动 */
-}
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import Captcha from "@/components/Captcha.vue";
+import { ElMessage } from "element-plus";
+import { loginAPI } from "@/api/registerOrLogin.js";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-}
+const router = useRouter();
 
-body {
+const message = ref("");
+const userData = ref(null);
+const account = ref("");
+const password = ref("");
+const captcha = ref("");
+const realCaptcha = ref("");
+const role = ref("USER");
+
+const handleLogin = async (event) => {
+  event.preventDefault();
+
+  const account = event.target.account.value;
+  const password = event.target.password.value;
+  const selectedRole = role.value;
+  const captcha = event.target.captcha.value;
+
+  if (!captcha) {
+    ElMessage.error("请输入验证码");
+    return;
+  }
+
+  if (captcha !== realCaptcha.value) {
+    ElMessage.error("验证码错误");
+    event.target.captcha.value = "";
+    return;
+  }
+
+  try {
+    const response = await loginAPI(account, password, selectedRole);
+    const reply = response.data;
+    if (reply.code === 200) {
+      localStorage.setItem("token", reply.results);
+      ElMessage.success("登录成功");
+      router.push("/home");
+    } else if (reply.code === 500) {
+      event.target.password.value = "";
+      event.target.captcha.value = "";
+      ElMessage.error(reply.results);
+    } else {
+      ElMessage.error("未知错误，请稍后再试");
+    }
+  } catch (error) {
+    ElMessage.error("网络错误，请稍后再试");
+  }
+};
+</script>
+
+<style scoped lang="scss">
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  background: linear-gradient(rgba(44, 119, 68, 0.1), rgba(44, 119, 68, 0.1)),
+    url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1932') center/cover;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.decorative-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  z-index: 1;
+  
+  .leaf {
+    position: absolute;
+    background: linear-gradient(45deg, rgba(92, 189, 122, 0.1), rgba(44, 119, 68, 0.08));
+    border-radius: 100% 0;
+    opacity: 0.7;
+    
+    &.leaf-1 {
+      width: 250px;
+      height: 250px;
+      top: -80px;
+      right: 100px;
+      transform: rotate(25deg);
+    }
+    
+    &.leaf-2 {
+      width: 180px;
+      height: 180px;
+      bottom: 80px;
+      left: -40px;
+      transform: rotate(-35deg);
+    }
+    
+    &.leaf-3 {
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      left: 10%;
+      transform: rotate(10deg);
+    }
+  }
+  
+  .agri-pattern {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(92, 189, 122, 0.03) 0px, transparent 2px),
+      radial-gradient(circle at 60% 70%, rgba(44, 119, 68, 0.03) 0px, transparent 2px),
+      radial-gradient(circle at 80% 90%, rgba(92, 189, 122, 0.03) 0px, transparent 2px);
+    background-size: 100px 100px;
+  }
 }
 
-.box {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 420px;
+.login-form {
+  width: 450px;
   padding: 40px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 15px 35px rgba(50, 100, 150, 0.15),
-    0 5px 15px rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 25px 50px rgba(92, 189, 122, 0.15), 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease-in-out;
+  z-index: 10;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(92, 189, 122, 0.2), 0 15px 35px rgba(0, 0, 0, 0.07);
+  }
 }
 
-.box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(50, 100, 150, 0.2),
-    0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-
-h2 {
-  font-size: 32px;
-  color: #2c3e50;
+.form-header {
   margin-bottom: 30px;
-  font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    
+    .agri-icon {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #2c7744, #5bbd7a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(90deg, #2c7744, #5bbd7a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  .welcome-text {
+    h3 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #2c7744;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #5a6c72;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-with-icon {
   position: relative;
-  padding-bottom: 10px;
+  
+  i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #5bbd7a;
+    font-size: 18px;
+    z-index: 1;
+  }
 }
 
-h2::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(to right, #3498db, #2ecc71);
-  border-radius: 2px;
-}
-
-.box input {
-  width: 100%;
-  padding: 16px 20px;
-  margin: 12px 0;
-  border-radius: 12px;
-  border: 1px solid rgba(200, 200, 200, 0.4);
+.custom-input {
+  width: 90%;
+  height: 50px;
+  padding: 15px 15px 15px 45px;
+  border-radius: 10px;
+  border: 1px solid #e0e6ed;
   font-size: 16px;
-  background-color: rgba(245, 248, 250, 0.8);
-  color: #34495e;
-  box-sizing: border-box;
-  transition: all 0.3s ease-in-out;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-}
-
-.box input::placeholder {
-  color: #95a5a6;
-}
-
-.box input:focus {
-  border-color: #3498db;
-  outline: none;
-  background-color: rgba(255, 255, 255, 1);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-}
-
-.log {
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #3498db, #2ecc71);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
-  transition: all 0.3s ease;
-  margin-top: 10px;
-}
-
-.log:hover {
-  background: linear-gradient(135deg, #2980b9, #27ae60);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
-}
-
-.log:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
-}
-
-.admin-log {
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #9b59b6, #e74c3c);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-top: 15px;
-  box-shadow: 0 6px 15px rgba(155, 89, 182, 0.3);
-  transition: all 0.3s ease;
-}
-
-.admin-log:hover {
-  background: linear-gradient(135deg, #8e44ad, #c0392b);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(155, 89, 182, 0.4);
-}
-
-.admin-log:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 10px rgba(155, 89, 182, 0.3);
-}
-
-.captcha-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin: 15px 0;
-}
-
-.captcha-container input {
-  width: 80%;
-  padding: 20px;
-  margin: 10px;
-  background: rgba(245, 248, 250, 0.8);
-  border-radius: 12px;
-  color: #34495e;
-  border: 1px solid rgba(200, 200, 200, 0.4);
-}
-
-.captcha-container input:focus {
-  border-color: #3498db;
-}
-
-.captcha-img {
-  width: 25%;
-  height: 50px;
-  background: linear-gradient(135deg, #3498db, #2ecc71);
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-  letter-spacing: 3px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.captcha-img:hover {
-  transform: scale(1.05);
-}
-
-.options {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin: 15px 0;
-}
-
-.remember {
-  display: flex;
-  align-items: center;
-}
-
-.remember input {
-  margin-right: 8px;
-}
-
-.forgot {
-  color: #3498db;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.forgot:hover {
-  color: #2980b9;
-  text-decoration: underline;
-}
-
-.divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(200, 200, 200, 0.5),
-    transparent
-  );
-  margin: 20px 0;
-}
-
-.social-login {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  width: 100%;
-  margin-top: 15px;
-}
-
-.social-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #fff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.social-btn:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.social-btn i {
-  font-size: 24px;
-}
-
-.facebook {
-  color: #3b5998;
-}
-.google {
-  color: #dd4b39;
-}
-.twitter {
-  color: #1da1f2;
-}
-
-.register {
-  margin-top: 20px;
-  color: #7f8c8d;
-  font-size: 15px;
-}
-
-.register a {
-  color: #3498db;
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 5px;
-  transition: color 0.3s ease;
-}
-
-.register a:hover {
-  color: #2980b9;
-  text-decoration: underline;
+  color: #2c3e50;
+  transition: all 0.3s;
+  background-color: rgba(255, 255, 255, 0.9);
+  
+  &:hover {
+    border-color: #a1c9a7;
+  }
+  
+  &:focus {
+    border-color: #5bbd7a;
+    box-shadow: 0 0 0 2px rgba(92, 189, 122, 0.2);
+    outline: none;
+  }
+  
+  &::placeholder {
+    color: #95a5a6;
+  }
 }
 
 .role-select {
   width: 100%;
-  padding: 16px 20px;
-  margin: 12px 0;
-  border-radius: 12px;
-  border: 1px solid rgba(200, 200, 200, 0.4);
+  height: 50px;
+  padding: 0 15px 0 45px;
+  border-radius: 10px;
+  border: 1px solid #e0e6ed;
   font-size: 16px;
-  background-color: rgba(245, 248, 250, 0.8);
-  color: #34495e;
-  box-sizing: border-box;
-  transition: all 0.3s ease-in-out;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+  color: #2c3e50;
+  appearance: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%235bbd7a'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 15px center/16px 16px;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s;
+  
+  &:hover {
+    border-color: #a1c9a7;
+  }
+  
+  &:focus {
+    border-color: #5bbd7a;
+    box-shadow: 0 0 0 2px rgba(92, 189, 122, 0.2);
+    outline: none;
+  }
 }
 
-.role-select:focus {
-  border-color: #3498db;
-  outline: none;
-  background-color: rgba(255, 255, 255, 1);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+.captcha-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  .captcha-component {
+    flex: 1;
+  }
+  
+  .input-with-icon {
+    flex: 2;
+  }
 }
 
-.register {
+.login-btn {
+  width: 100%;
+  height: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(90deg, #2c7744, #5bbd7a);
+  color: white;
+  box-shadow: 0 8px 20px rgba(92, 189, 122, 0.3);
+  transition: all 0.4s;
+  margin-top: 10px;
+  cursor: pointer;
+  
+  &:hover {
+    background: linear-gradient(90deg, #245d36, #4aa066);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(92, 189, 122, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.form-footer {
   margin-top: 20px;
-  color: #7f8c8d;
-  font-size: 15px;
   text-align: center;
 }
 
-.register a {
-  color: #3498db;
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 5px;
-  cursor: pointer;
-  transition: color 0.3s ease;
+.register-link {
+  color: #5a6c72;
+  font-size: 0.95rem;
+  
+  a {
+    color: #2c7744;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 8px;
+    transition: all 0.3s;
+    cursor: pointer;
+    
+    &:hover {
+      color: #5bbd7a;
+      text-decoration: underline;
+    }
+  }
 }
 
-.register a:hover {
-  color: #2980b9;
-  text-decoration: underline;
+.error-message {
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 5px;
 }
 
 @media (max-width: 768px) {
-  .box {
+  .login-form {
     width: 90%;
     padding: 30px;
   }
-
-  h2 {
-    font-size: 28px;
+  
+  .form-header .logo-container h2 {
+    font-size: 1.5rem;
   }
-
-  .log,
-  .admin-log {
-    font-size: 16px;
-    padding: 14px;
+  
+  .welcome-text h3 {
+    font-size: 1.5rem;
   }
-
-  .captcha-container input {
-    width: 55%;
+  
+  .login-btn {
+    height: 48px;
+    font-size: 1rem;
+  }
+  
+  .captcha-container {
+    flex-direction: column;
+    
+    .captcha-component, .input-with-icon {
+      width: 100%;
+    }
   }
 }
 </style>
-
