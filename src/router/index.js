@@ -118,7 +118,7 @@ const routes = [
     name: "adminManagement",
     component: AdminManagement,
     meta: {
-      title: "银行后台管理",
+      title: "管理员后台管理",
     },
   },
   
