@@ -1,5 +1,5 @@
 <template>
-  <h1>欢迎登录</h1>
+  <h1>欢迎来到首页</h1>
 </template>
 
 <script setup>
