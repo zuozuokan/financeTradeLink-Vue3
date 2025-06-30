@@ -10,19 +10,19 @@ export default defineConfig({
     open: true, // 启动时自动打开浏览器
 
     // 若启用网关，则用以下配置
-    proxy: {
-      "/project": {
-        target: "http://localhost:9999", //
-        changeOrigin: true, // 是否改变源
-      },
-    },
-    // 若不启用网关，则使用以下配置
     // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:xxxxx', // xxxxx为后端微服务的端口
-    //     changeOrigin: true,
-    //   }
-    // }
+    //   "/project": {
+    //     target: "http://localhost:9999", //
+    //     changeOrigin: true, // 是否改变源
+    //   },
+    // },
+    // 若不启用网关，则使用以下配置
+    proxy: {
+      '/api': {
+        target: 'http://localhost:30000', // xxxxx为后端微服务的端口
+        changeOrigin: true,
+      }
+    }
   },
   resolve: {
     alias: {

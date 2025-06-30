@@ -2,17 +2,18 @@ import axios from "axios";
 
 const request = axios.create({
   // 网关路径
-  // baseURL: "/project-user/api/user",
-  // "project-base" 是网关路径,可以在后端代码gateway的bootstrap.yml中查看
+  // baseURL: "/project-user/api/application",
+  // "project-user" 是网关路径,可以在后端代码gateway的bootstrap.yml中查看
 
   // 非网关路径（其他微服务，同理）
-  baseURL: '/api/user',
+  baseURL: '/api/application',
   timeout: 5000,
 });
 
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
+
     // 在发送请求之前做些什么
     if (localStorage.getItem("token")) {
       config.headers = {

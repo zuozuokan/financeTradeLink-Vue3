@@ -59,7 +59,7 @@ if (token) {
     onMounted(async () => {
       try {
         const res = await userGetCurrentInfoAPI(uuid);
-        currentUserInfo.value = res;
+        currentUserInfo.value = res.results;
         await fetchNotices();
         await fetchRecommendedProducts();
       } catch (err) {
