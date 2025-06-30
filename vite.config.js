@@ -19,7 +19,7 @@ export default defineConfig({
     // 若不启用网关，则使用以下配置
     proxy: {
       '/api': {
-        target: 'http://localhost:30000', // xxxxx为后端微服务的端口
+        target: 'http://localhost:30011', // xxxxx为后端微服务的端口
         changeOrigin: true,
       }
     }
