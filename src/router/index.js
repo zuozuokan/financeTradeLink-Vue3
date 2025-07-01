@@ -7,6 +7,7 @@ import AgriculturalKnowledgeBase from "@/views/AgriculturalKnowledgeBase.vue";
 import ExpertGuide from "@/views/ExpertGuide.vue";
 import ShoppingCart from "@/views/ShoppingCart.vue";
 import OrderCheckout from "@/views/OrderCheckout.vue";
+import OrderDetail from "@/views/OrderDetail.vue";
 import UserManagement from "@/views/UserManagement.vue";
 import ExpertManagement from "@/views/ExpertManagement.vue";
 import BankManagement from "@/views/BankManagement.vue";
@@ -95,7 +96,7 @@ const routes = [
     },
   },
   {
-    path: "/shopping-cart ",
+    path: "/shopping-cart",
     name: "shoppingCart",
     component: ShoppingCart,
     meta: {
@@ -108,6 +109,14 @@ const routes = [
     component: OrderCheckout,
     meta: {
       title: "订单查看",
+    },
+  },
+  {
+    path: '/order-detail/:id',
+    name: 'OrderDetail',
+    component: OrderDetail,
+    meta: {
+      title: "订单详情",
     },
   },
   {
