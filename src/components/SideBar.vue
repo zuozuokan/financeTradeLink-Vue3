@@ -1,51 +1,61 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="25">
-      <el-menu
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        class="el-menu-vertical-demo"
-        text-color="#fff"
-        default-active=""
-        @open="handleOpen"
-        @close="handleClose"
-      >
-        <!-- 标题项，不可点击 -->
-        <el-menu-item @click.stop.prevent id="side-title">
-          <el-icon><Location /></el-icon>
-          <span class="menu-title">融销通平台导航栏</span>
-        </el-menu-item>
+  <div class="flex-style">
+    <el-row class="tac">
+      <el-col :span="25">
+        <el-menu
+          active-text-color="#ffd04b"
+          background-color="#545c64"
+          class="el-menu-vertical-demo"
+          text-color="#fff"
+          default-active=""
+          @open="handleOpen"
+          @close="handleClose"
+        >
+          <!-- 标题项，不可点击 -->
+          <el-menu-item @click.stop.prevent id="side-title">
+            <el-icon><Location /></el-icon>
+            <span class="menu-title">融销通平台导航栏</span>
+          </el-menu-item>
 
-        <!-- 手动跳转菜单项 -->
-        <el-menu-item @click="router.push('/home')">
-          <el-icon><IconMenu /></el-icon>
-          <span>首页</span>
-        </el-menu-item>
+          <!-- 手动跳转菜单项 -->
+          <el-menu-item @click="router.push('/home')">
+            <el-icon><IconMenu /></el-icon>
+            <span>首页</span>
+          </el-menu-item>
 
-        <el-menu-item @click="router.push('/agricultural-knowledge-base')">
-          <el-icon><Document /></el-icon>
-          <span>农业知识库</span>
-        </el-menu-item>
+          <!-- 个人信息管理 -->
+          <el-sub-menu index="3">
+            <template #title>
+              <el-icon><ShoppingCart /></el-icon>
+              <span>个人信息管理</span>
+            </template>
+            <el-menu-item @click="router.push('/user-info-exchange')">修改个人信息</el-menu-item>
+          </el-sub-menu>
 
-        <el-sub-menu index="4">
-          <template #title>
-            <el-icon><ShoppingCart /></el-icon>
-            <span>购物指南</span>
-          </template>
-          <el-menu-item @click="router.push('/prodect')">农业商品</el-menu-item>
-          <el-menu-item @click="router.push('/shopping-cart')">我的购物车</el-menu-item>
-          <el-menu-item @click="router.push('/order-checkout')">我的订单</el-menu-item>
-        </el-sub-menu>
+          <el-menu-item @click="router.push('/agricultural-knowledge-base')">
+            <el-icon><Document /></el-icon>
+            <span>农业知识库</span>
+          </el-menu-item>
 
-        <el-menu-item @click="goToAdminByRole">
-          <el-icon><Setting /></el-icon>
-          <span>后台管理</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
-  </el-row>
+          <el-sub-menu index="4">
+            <template #title>
+              <el-icon><ShoppingCart /></el-icon>
+              <span>购物指南</span>
+            </template>
+            <el-menu-item @click="router.push('/prodect')">农业商品</el-menu-item>
+            <el-menu-item @click="router.push('/shopping-cart')">我的购物车</el-menu-item>
+            <el-menu-item @click="router.push('/order-checkout')">我的订单</el-menu-item>
+          </el-sub-menu>
+
+          <el-menu-item @click="goToAdminByRole">
+            <el-icon><Setting /></el-icon>
+            <span>后台管理</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
+    </el-row>
+  </div>
 </template>
-
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
@@ -121,13 +131,12 @@ const goToAdminByRole = () => {
 #side-title {
   font-size: 20px;
   font-weight: bold;
-  color: #ffffff; 
+  color: #ffffff;
 }
 
 .el-menu-item:hover#side-title {
   background-color: transparent !important;
   color: #ffffff !important;
-  cursor: default; 
+  cursor: default;
 }
-
 </style>

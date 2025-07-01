@@ -145,7 +145,7 @@ const routes = [
     component: UserInfoExchange,
     meta: {
       title: "用户信息更改",
-      hideSidebar: true, 
+      // hideSidebar: true, 
     },
   },
   {

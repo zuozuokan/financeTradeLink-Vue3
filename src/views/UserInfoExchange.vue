@@ -1,6 +1,6 @@
 <template>
   <div class="user-profile-container">
-    <UserManageSideBar />
+    <!-- <UserManageSideBar /> -->
 
     <div class="profile-content">
       <div class="profile-header">
@@ -219,6 +219,7 @@ const updateAddressInfo = async () => {
   display: flex;
   min-height: 100vh;
   background-color: #f5f7fa;
+  background: linear-gradient(135deg, #f8f9fa 0%, #75d194 100%);
 }
 
 .profile-content {
@@ -254,6 +255,7 @@ const updateAddressInfo = async () => {
   border: none;
   overflow: hidden;
   transition: all 0.3s ease;
+   background: linear-gradient(135deg, #f8f9fa 0%, #c0e8ce 100%);
 
   &:hover {
     transform: translateY(-2px);
