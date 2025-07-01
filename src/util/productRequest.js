@@ -1,38 +1,19 @@
 import axios from "axios";
-import { de } from "element-plus/es/locales.mjs";
 
 const request = axios.create({
   // 网关路径
-  // baseURL: "/project-user/api/user",
+  // baseURL: "/project-user/api/product",
   // "project-base" 是网关路径,可以在后端代码gateway的bootstrap.yml中查看
 
   // 非网关路径（其他微服务，同理）
-   baseURL: '/api/product',
-  timeout: 5000,
-});
-const orderRequest = axios.create({
-  // 网关路径
-  // baseURL: "/project-order/api/order",
-  // "project-base" 是网关路径,可以在后端代码gateway的bootstrap.yml中查看
-
-  // 非网关路径（其他微服务，同理）
-   baseURL: '/api/order',
+  baseURL: '/api/product',
   timeout: 5000,
 });
 
-const loadRequest = axios.create({
-  // 网关路径
-  // baseURL: "/project-load/api/load",
-  // "project-base" 是网关路径,可以在后端代码gateway的bootstrap.yml中查看
-
-  // 非网关路径（其他微服务，同理）
-   baseURL: '/api/bank',
-  timeout: 5000,
-});
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
-    console.log('请求拦截器触发：', config); // 调试：打印 config
+
     // 在发送请求之前做些什么
     if (localStorage.getItem("token")) {
       config.headers = {
@@ -53,7 +34,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => {
     // 对响应数据做点什么
-    return response.data;
+    return response;
   },
   (error) => {
     // 对响应错误做点什么
@@ -63,5 +44,3 @@ request.interceptors.response.use(
 
 // 对外暴露
 export default request;
-export { orderRequest };
-export { loadRequest };

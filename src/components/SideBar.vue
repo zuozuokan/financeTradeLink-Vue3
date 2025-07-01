@@ -9,6 +9,7 @@
         default-active=""
         @open="handleOpen"
         @close="handleClose"
+        @select="handleMenuSelect"
       >
         <!-- 标题项，不可点击 -->
         <el-menu-item @click.stop.prevent id="side-title">
@@ -32,9 +33,18 @@
             <el-icon><ShoppingCart /></el-icon>
             <span>购物指南</span>
           </template>
-          <el-menu-item @click="router.push('/prodect')">农业商品</el-menu-item>
+          <el-menu-item @click="router.push('/product')">农业商品</el-menu-item><!--Product大写啊-->
+           <!-- 新增：仅USER角色(只有农民可发布商品)可见的子目录 -->
+              <!-- <el-menu-item 
+                v-if="role1 === 'USER'" 
+                @click="router.push('/product/organic')"
+              >
+                商品发布
+              </el-menu-item> -->
           <el-menu-item @click="router.push('/shopping-cart')">我的购物车</el-menu-item>
           <el-menu-item @click="router.push('/order-checkout')">我的订单</el-menu-item>
+
+          
         </el-sub-menu>
 
         <el-menu-item @click="goToAdminByRole">
@@ -66,7 +76,10 @@ const handleClose = (key: string, keyPath: string[]) => {
 };
 
 const router = useRouter();
-
+const token1 = localStorage.getItem('token');
+  const payload1 = jwtDecode(token1);
+  const userUuid1 = payload1.uuid;
+  const role1 = payload1.role;
 const goToAdminByRole = () => {
   const token = localStorage.getItem("token");
   if (!token) {

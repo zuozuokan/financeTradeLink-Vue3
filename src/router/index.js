@@ -58,11 +58,21 @@ const routes = [
     },
   },
   {
-    path: "/prodect",
-    name: "prodect",
+    path: "/product",
+    name: "product",
     component: Product,
     meta: {
       title: "产品",
+  //    hideSidebar: true, // 隐藏侧边栏
+    },
+  },
+  {
+    path: "/product/:productUuid",
+    name: "productDetail",  
+    component: () => import("@/views/ProductDetail.vue"), // 懒加载产品详情组件
+    meta: { 
+      title: "产品详情",
+     // hideSidebar: true, // 隐藏侧边栏
     },
   },
   {
