@@ -1,4 +1,4 @@
-import request from "../util/userRequest";
+import request from "../../util/userRequest";
 
 // 获取所有商品
 export const getProducts = () =>

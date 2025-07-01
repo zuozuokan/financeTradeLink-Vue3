@@ -44,7 +44,7 @@ import {
   addKnowledgeAPI,
   updateKnowledgeAPI,
   deleteKnowledgeAPI
-} from '@/api/adminKnowledge'; // 你需要实现这些API
+} from '@/api/admin/adminKnowledge'; // 你需要实现这些API
 
 const knowledgeList = ref([]);
 const dialogVisible = ref(false);

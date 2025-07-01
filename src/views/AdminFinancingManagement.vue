@@ -27,7 +27,7 @@
   <script setup>
   import { ref, onMounted } from 'vue'
   // 你需要实现这些API
-  import { getFinancingApplications, reviewFinancingApplication } from '@/api/adminFinancing'
+  import { getFinancingApplications, reviewFinancingApplication } from '@/api/admin/adminFinancing'
   
   const applications = ref([])
   

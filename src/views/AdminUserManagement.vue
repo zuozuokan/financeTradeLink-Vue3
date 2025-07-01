@@ -45,7 +45,7 @@ import {
   operationUserAPI,
   registerBankAPI,
   registerExpertAPI
-} from '@/api/adminUser'; // 你需要实现这些API
+} from '@/api/admin/adminUser'; // 你需要实现这些API
 
 const activeTab = ref('bank');
 const userList = ref([]);

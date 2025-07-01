@@ -19,6 +19,7 @@ import AddFinancing from "@/views/AddFinancing.vue";
 import FinancingList from "@/views/FinancingList.vue";
 import AddKnowledge from "@/views/AddKnowledge.vue";
 import UserKnowledge from "@/views/UserKnowledge.vue";
+import KnowledgeDetail from '@/views/KnowledgeDetail.vue';
 import AdminUserManagement from '@/views/AdminUserManagement.vue';
 import AdminKnowledgeManagement from '@/views/AdminKnowledgeManagement.vue';
 import AdminNoticeManagement from '@/views/AdminNoticeManagement.vue';
@@ -79,6 +80,11 @@ const routes = [
     meta: {
       title: "农业知识库",
     },
+  },
+  {
+    path: '/knowledge/:id',
+    name: 'KnowledgeDetail',
+    component: KnowledgeDetail
   },
   {
     path: "/expert-guide",

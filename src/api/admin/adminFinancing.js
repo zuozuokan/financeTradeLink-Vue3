@@ -1,4 +1,4 @@
-import request from "../util/userRequest";
+import request from "../../util/userRequest";
 
 // 获取所有融资申请
 export const getFinancingApplications = () =>

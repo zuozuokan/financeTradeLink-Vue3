@@ -25,7 +25,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 // 你需要实现这些API
-import { getProducts, updateProductStatus } from '@/api/adminProduct'
+import { getProducts, updateProductStatus } from '@/api/admin/adminProduct'
 
 const products = ref([])
 
