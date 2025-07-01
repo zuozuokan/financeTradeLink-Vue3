@@ -1,5 +1,5 @@
 
-import {loadRequest} from '../util/userRequest';
+
 
 export const getLoanListByUserUuidAPI = async (userUuid) => {
   try {

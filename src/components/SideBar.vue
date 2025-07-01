@@ -99,7 +99,7 @@ const handleClose = (key: string, keyPath: string[]) => {
   console.log("关闭子菜单:", key, keyPath);
 };
 
-const router = useRouter();
+
 const token1 = localStorage.getItem('token');
   const payload1 = jwtDecode(token1);
   const userUuid1 = payload1.uuid;
