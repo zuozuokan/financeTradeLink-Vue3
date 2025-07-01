@@ -141,6 +141,7 @@ const handleLogin = async (event) => {
       ElMessage.error("未知错误，请稍后再试");
     }
   } catch (error) {
+    console.log(error);
     ElMessage.error("网络错误，请稍后再试");
   }
 };
