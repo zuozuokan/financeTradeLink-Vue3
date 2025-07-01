@@ -107,6 +107,7 @@ function animateValue(element, start, end, duration) {
   display: flex;
   height: 100vh;
   background: #f8f9fa;
+   
 }
 
 .main-welcome {

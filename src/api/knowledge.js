@@ -44,3 +44,8 @@ export const updateKnowledge = (uuid, updatedData) => {
     params: { uuid },
   });
 };
+
+
+
+
+  
