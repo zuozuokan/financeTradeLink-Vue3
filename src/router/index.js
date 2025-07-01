@@ -19,6 +19,14 @@ import AddFinancing from "@/views/AddFinancing.vue";
 import FinancingList from "@/views/FinancingList.vue";
 import AddKnowledge from "@/views/AddKnowledge.vue";
 import UserKnowledge from "@/views/UserKnowledge.vue";
+import KnowledgeDetail from '@/views/KnowledgeDetail.vue';
+import AdminUserManagement from '@/views/AdminUserManagement.vue';
+import AdminKnowledgeManagement from '@/views/AdminKnowledgeManagement.vue';
+import AdminNoticeManagement from '@/views/AdminNoticeManagement.vue';
+import AdminProductManagement from '@/views/AdminProductManagement.vue';
+import AdminFinancingManagement from '@/views/AdminFinancingManagement.vue';
+
+
 
 
 const routes = [
@@ -74,6 +82,11 @@ const routes = [
     },
   },
   {
+    path: '/knowledge/:id',
+    name: 'KnowledgeDetail',
+    component: KnowledgeDetail
+  },
+  {
     path: "/expert-guide",
     name: "expertGuide",
     component: ExpertGuide,
@@ -126,8 +139,16 @@ const routes = [
     path: "/admin-management",
     name: "adminManagement",
     component: AdminManagement,
+    children: [
+      { path: 'user', component: AdminUserManagement },
+      { path: 'knowledge', component: AdminKnowledgeManagement },
+      { path: 'notice', component: AdminNoticeManagement },
+      { path: 'product', component: AdminProductManagement },
+      { path: 'financing', component: AdminFinancingManagement },
+    ],
     meta: {
-      title: "管理员后台管理",
+      title: "管理员后台",
+      hideSidebar: true, 
     },
   },
   {
