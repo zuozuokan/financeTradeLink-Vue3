@@ -246,8 +246,7 @@ function generateRandomString() {
 
 /* 卡片样式 */
 .publish-card {
-  width: 95%;
-  max-width: 800px;
+  width: 75%;
   margin: 20px auto;
   border-radius: 16px;
   overflow: hidden;
