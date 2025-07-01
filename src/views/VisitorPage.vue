@@ -45,7 +45,7 @@
     </div>
     
     <!-- 平台特点 -->
-    <div class="features-section">
+    <!-- <div class="features-section">
       <div class="section-header">
         <h2>平台核心优势</h2>
         <p>集生产、流通、销售、服务一体化智慧农业解决方案</p>
@@ -84,7 +84,7 @@
           <p>农业供应链金融服务，解决资金流转痛点</p>
         </div>
       </div>
-    </div>
+    </div> -->
     
     <!-- 农产品展示 -->
     <div class="products-section">
