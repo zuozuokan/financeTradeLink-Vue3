@@ -7,6 +7,7 @@ import AgriculturalKnowledgeBase from "@/views/AgriculturalKnowledgeBase.vue";
 import ExpertGuide from "@/views/ExpertGuide.vue";
 import ShoppingCart from "@/views/ShoppingCart.vue";
 import OrderCheckout from "@/views/OrderCheckout.vue";
+import OrderDetail from "@/views/OrderDetail.vue";
 import UserManagement from "@/views/UserManagement.vue";
 import ExpertManagement from "@/views/ExpertManagement.vue";
 import BankManagement from "@/views/BankManagement.vue";
@@ -27,6 +28,10 @@ import AdminProductManagement from '@/views/AdminProductManagement.vue';
 import AdminFinancingManagement from '@/views/AdminFinancingManagement.vue';
 
 
+import ExpertAppointment from "../views/ExpertAppointment.vue";
+import ExpertAddKnowledge from "../views/ExpertAddKnowledge.vue";
+import ExpertKnowledgeList from "../views/ExpertKnowledgeList.vue";
+import ConsultList from "../views/consultList.vue";
 
 
 const routes = [
@@ -105,7 +110,7 @@ const routes = [
     },
   },
   {
-    path: "/shopping-cart ",
+    path: "/shopping-cart",
     name: "shoppingCart",
     component: ShoppingCart,
     meta: {
@@ -118,6 +123,14 @@ const routes = [
     component: OrderCheckout,
     meta: {
       title: "订单查看",
+    },
+  },
+  {
+    path: '/order-detail/:id',
+    name: 'OrderDetail',
+    component: OrderDetail,
+    meta: {
+      title: "订单详情",
     },
   },
   {
@@ -135,6 +148,7 @@ const routes = [
     component: ExpertManagement,
     meta: {
       title: "专家后台管理",
+      hideSidebar:true,
     },
   },
   {
@@ -158,7 +172,7 @@ const routes = [
     ],
     meta: {
       title: "管理员后台",
-      hideSidebar: true, 
+      hideSidebar: true,
     },
   },
   {
@@ -176,7 +190,7 @@ const routes = [
     component: UserInfoExchange,
     meta: {
       title: "用户信息更改",
-      // hideSidebar: true, 
+      // hideSidebar: true,
     },
   },
   {
@@ -233,7 +247,67 @@ const routes = [
       hideSidebar: true, 
     },
   },
-  
+  //基于用户视角的预约咨询有关的内容
+  {
+    path: "/expert-guide",
+    name: "expertGuide",
+    component: ExpertGuide,
+    meta: {
+      title: "用户的预约咨询",
+      hideSidebar: true,
+    },
+  },
+  {
+    path: "/consult-list",
+    name: "consultList",
+    component: ConsultList,
+    meta: {
+      title: "我的预约管理",
+      hideSidebar: true,
+    },
+  },
+
+
+  // 专家后台管理的相关路由配置
+
+  {
+    path: "/expert-info",
+    name: "expertInfo",
+    component: ExpertManagement,
+    meta: {
+      title: "专家信息管理",
+      hideSidebar: true,
+    },
+  },
+  {
+    path: "/expert-appointment",
+    name: "expertAppointment",
+    component: ExpertAppointment,
+    meta: {
+      title: "专家预约管理",
+      hideSidebar: true,
+    },
+  },
+  {
+    path: "/expert-add-knowledge",
+    name: "expertAddKnowledge",
+    component: ExpertAddKnowledge,
+    meta: {
+      title: "专家发布知识",
+      hideSidebar: true,
+    },
+  },
+  {
+    path: "/expert-knowledge-list",
+    name: "expertKnowledgeList",
+    component: ExpertKnowledgeList,
+    meta: {
+      title: "专家知识列表",
+      hideSidebar: true,
+    },
+  },
+
+
 ];
 
 const router = createRouter({

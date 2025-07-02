@@ -2,7 +2,7 @@ import request from "../util/loanRequest.js";
 
 // 添加融资申请
 export const addLoanApplication = (userUuid, loanApplication) => {
-  return request.post("/", loanApplication, {
+  return request.post("/add", loanApplication, {
     params: {
       userUuid
     }
