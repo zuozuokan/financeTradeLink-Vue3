@@ -44,3 +44,7 @@ export const userUpdateAddressAPI = (addressUuid, address) =>
       addressUuid: addressUuid,
     },
   });
+
+// 更新用户信息
+export const updateUserAPI = (user) =>
+  request.post("/update-user", user);
