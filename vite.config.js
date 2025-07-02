@@ -25,11 +25,21 @@ export default defineConfig({
     // },    
     //不启用网关，端口治理
     proxy: {
-      '/api': {
-        target: 'http://localhost:30000', // xxxxx为后端微服务的端口
+     
+      '/api/user': {
+        target: 'http://localhost:30000', // 用户相关请求
         changeOrigin: true,
-      }
+      },
+      '/api/product': {
+        target: 'http://localhost:30000', // 商品相关请求
+        changeOrigin: true,
+      },
+      '/api': {
+        target: 'http://localhost:30011', // xxxxx为后端微服务的端口
+        changeOrigin: true,
+      },
     },
+      
   },
   resolve: {
     alias: {
