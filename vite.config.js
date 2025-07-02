@@ -17,6 +17,13 @@ export default defineConfig({
     //   },
     // },
     // 若不启用网关，则使用以下配置
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:30011', // xxxxx为后端微服务的端口
+    //     changeOrigin: true,
+    //   }
+    // },    
+    //不启用网关，端口治理
     proxy: {
       '/api': {
         target: 'http://localhost:30000', // xxxxx为后端微服务的端口
@@ -30,4 +37,5 @@ export default defineConfig({
       vue: "vue/dist/vue.esm-bundler.js", // 使用完整版的 Vue
     },
   },
+ 
 });

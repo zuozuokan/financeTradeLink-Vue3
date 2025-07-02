@@ -1,4 +1,4 @@
-import request from "../util/productResquest.js";
+import request from "../util/productRequest";
 
 // 发布农产品样式图（带自定义名称）
 export const addProductPictureAPI = (file, customName) => {
@@ -36,6 +36,7 @@ export const getProductListByuuidAPI = (uuid) => request.get("/listby-uuid",{
     userUuid: uuid,
   },
 });
+
 
 
 

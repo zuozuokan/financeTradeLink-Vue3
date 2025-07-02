@@ -44,7 +44,7 @@
           <el-icon class="menu-icon"><ShoppingCart /></el-icon>
           <span>购物指南</span>
         </template>
-        <el-menu-item index="4-1" @click="router.push('/prodect')">农业商品</el-menu-item>
+        <el-menu-item index="4-1" @click="router.push('/product')">农业商品</el-menu-item>
         <el-menu-item index="4-2" @click="router.push('/shopping-cart')">我的购物车</el-menu-item>
         <el-menu-item index="4-3" @click="router.push('/order-checkout')">我的订单</el-menu-item>
       </el-sub-menu>
@@ -80,6 +80,12 @@ const handleOpen = (key: string, keyPath: string[]) => {
 const handleClose = (key: string, keyPath: string[]) => {
   console.log("关闭子菜单:", key, keyPath);
 };
+
+
+const token1 = localStorage.getItem('token');
+  const payload1 = jwtDecode(token1);
+  const userUuid1 = payload1.uuid;
+  const role1 = payload1.role;
 
 const goToAdminByRole = () => {
   const token = localStorage.getItem("token");
