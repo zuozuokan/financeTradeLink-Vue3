@@ -34,6 +34,10 @@ export default defineConfig({
         target: 'http://localhost:30000', // 商品相关请求
         changeOrigin: true,
       },
+      '/api/application': {
+        target: 'http://localhost:30000', // 商品相关请求
+        changeOrigin: true,
+      },
       '/api': {
         target: 'http://localhost:30011', // xxxxx为后端微服务的端口
         changeOrigin: true,
