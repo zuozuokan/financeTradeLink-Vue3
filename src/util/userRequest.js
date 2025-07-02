@@ -1,4 +1,5 @@
 import axios from "axios";
+import { de } from "element-plus/es/locales.mjs";
 
 const request = axios.create({
   // 网关路径
@@ -10,9 +11,11 @@ const request = axios.create({
   timeout: 5000,
 });
 
+
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
+    console.log('请求拦截器触发：', config); // 调试：打印 config
     // 在发送请求之前做些什么
     if (localStorage.getItem("token")) {
       config.headers = {

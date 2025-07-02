@@ -58,7 +58,7 @@ export default defineConfig({
 
       // 用户服务知识模块代理
       '/api/knowledge': {
-        target: 'http://localhost:30000',
+        target: 'http://localhost:30011',
         changeOrigin: true,
         rewrite: (path) => {
           console.log('代理路径:', path); // 输出原始路径
@@ -77,7 +77,14 @@ export default defineConfig({
         target: 'http://localhost:30000',
         changeOrigin: true,
       },
-
+      '/api/order':{
+        target:'http://localhost:30000',
+        changeOrigin:true
+      },
+      '/api/bank':{
+        target:'http://localhost:30020',
+        changeOrigin:true
+      }
 
     }
   },

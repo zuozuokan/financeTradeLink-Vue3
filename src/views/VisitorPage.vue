@@ -9,7 +9,7 @@
       
       <div class="nav-links">
         <router-link to="/">首页</router-link>
-        <router-link to="/prodect">农产品中心</router-link>
+        <router-link to="/product">农产品中心</router-link>
         <router-link to="/agricultural-knowledge-base">智慧方案</router-link>
         <router-link to="/">关于我们</router-link>
       </div>
