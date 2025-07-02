@@ -98,9 +98,10 @@ const refreshRes = ref(null); // 用于存储刷新后的结果
  // 初始化加载
  onMounted(() => {
     isBankRole.value = role === 'BANK';
-    
+
     // 如果有用户UUID，则加载该用户的贷款申请列表
     if (userUuid) {
+   //   console.log('当前用户 UUID:', userUuid); // 调试输出
         handleSearchByUserUuid();
     }
   });
@@ -117,14 +118,15 @@ const refreshRes = ref(null); // 用于存储刷新后的结果
     }
   
     try {
+     // console.log('查询用户 UUID:', searchUuid); // 调试输出
       const res = await getLoanListByUserUuidAPI(searchUuid);
      // console.log('查询结果:',getLoanListByUserUuidAPI(searchUuid )); // 调试输出
       console.log('查询结果:', res); // 调试输出
-      if (res.data.code === 200) {
-        tableData.value = res.data.results ;
+      if (res.code === 200) {
+        tableData.value = res.results ;
         ElMessage.success(`查询成功，共 ${tableData.value.length} 条记录`);
       } else {
-        ElMessage.error(res.data.msg || '查询失败');
+        ElMessage.error(res.msg || '查询失败');
       }
     } catch (error) {
       ElMessage.error('网络错误，请重试');
@@ -142,9 +144,9 @@ const refreshRes = ref(null); // 用于存储刷新后的结果
     try {
       const res = await getLoanDetailAPIByLoadUuis(queryForm.loanProjectNo);
     //  console.log('查询结果:', res); // 调试输出
-      if (res.data.code === 200) {
-     //   console.log('查询结果22:', res.data.results); // 调试输出
-        tableData.value = [res.data.results]; // 单个数据转数组
+      if (res.code === 200) {
+     //   console.log('查询结果22:', res.results); // 调试输出
+        tableData.value = [res.results]; // 单个数据转数组
         ElMessage.success('查询成功');
       } else {
         ElMessage.error(res.msg || '查询失败');
@@ -163,7 +165,7 @@ const refreshRes = ref(null); // 用于存储刷新后的结果
     }
     const submitRes = await  loadAdviceAPI(row.loanApplicationUuid, row.bankAdvice);
      console.log('提交结果:', submitRes); // 调试输出
-     if(submitRes.data.code === 200) {
+     if(submitRes.code === 200) {
       ElMessage.success('提交建议成功');
     }else{
         ElMessage.error('提交失败：' + (submitRes.msg || '未知错误'));
@@ -180,13 +182,13 @@ const refreshTableData = async () => {
   try {
     if (!queryForm.loanProjectNo) {
       const res = await getLoanListByUserUuidAPI(userUuid);
-      if (res.data.code === 200) {
-        tableData.value = res.data.results;
+      if (res.code === 200) {
+        tableData.value = res.results;
       }
     } else {
       const res = await getLoanDetailAPIByLoadUuis(queryForm.loanProjectNo);
-      if (res.data.code === 200) {
-        tableData.value = [res.data.results];
+      if (res.code === 200) {
+        tableData.value = [res.results];
       }
     }
   } catch (e) {

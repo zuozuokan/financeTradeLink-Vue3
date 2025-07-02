@@ -51,7 +51,7 @@
             <el-button
                 type="info"
                 @click="deleteProduct(product.productUuid)"
-                v-if="role === 'USER' || role === 'ADMIN'"
+                v-if="(role === 'USER' || role === 'ADMIN')&&(product.productUserUuid === userUuid)"
                 size="large"
                 >
                 下架商品
@@ -59,7 +59,7 @@
             <el-button
             type="info"
             @click="handleOpenEditDialog(product)"
-            v-if="role === 'USER' || 'ADMIN'"
+            v-if="(role === 'USER' || role === 'ADMIN')&&(product.productUserUuid === userUuid)"
             size="large"
           >
             修改商品
@@ -117,6 +117,41 @@
             <el-option label="下架" value="OFF_SALE" />
           </el-select>
         </el-form-item>
+        <el-form-item label="图片 URL">
+      <el-input
+        v-model="editForm.productImageUrl"
+        placeholder="请输入图片 URL（可选）"
+      />
+    </el-form-item>
+        <!-- 新增图片上传区域 -->
+    <el-form-item label="商品图片">
+      <!-- 上传组件 -->
+      <el-upload
+        class="image-uploader"
+        :http-request="handleImageUpload"  
+        :file-list="fileList"             
+        accept="image/*"                         
+        :on-remove="handleImageRemove"     
+        :disabled="isAdding"              
+      >
+        <el-button type="primary" :loading="isUploading">
+          {{ isUploading ? '上传中...' : '点击上传图片' }}
+        </el-button>
+      </el-upload>
+
+      <!-- 自定义名称输入框（与后端 customName 对应） -->
+      <el-input
+        v-model="customName"
+        placeholder="输入图片自定义名称（如商品名称）"
+        style="margin-top: 8px;"
+        :disabled="isAdding"
+      />
+
+      <!-- 图片预览 -->
+      <div class="image-preview" v-if="editForm.productImageUrl">
+        <img :src="editForm.productImageUrl" alt="预览" />
+      </div>
+    </el-form-item>
       </el-form>
 
       <template #footer>
@@ -130,14 +165,18 @@
   <script setup>
   import { ref, onMounted, watch } from "vue";
   import { useRoute } from "vue-router";
-  import { getProductDetailAPI, purchaseProductAPI,deleteProductAPI, updateProductAPI } from "../api/product";
+  import { getProductDetailAPI,deleteProductAPI, updateProductAPI ,addProductPictureAPI} from "../api/product";
+  import {   purchaseProductAPI } from "../api/order";
   import { ElMessage, ElImage, ElInputNumber, ElButton , ElDialog, ElForm, ElFormItem, ElInput, ElSelect, ElOption,  ElMessageBox } from "element-plus";
  
   import dayjs from "dayjs";
   import utc from "dayjs/plugin/utc";
   import { jwtDecode } from 'jwt-decode';
   dayjs.extend(utc);
-  
+  // 上传相关响应式数据
+const fileList = ref([]);       // 管理已上传图片
+const customName = ref('');     // 图片自定义名称（对应后端 customName）
+const isUploading = ref(false); // 上传loading状态
   // 响应式数据
   const product = ref({});
   const amount = ref(1);
@@ -167,7 +206,8 @@ const editForm = ref({
   productPrice: 0,
   productDescription: "",
   productStock: 0,
-  productStatus: "" // 假设状态为枚举值（如 'ON_SALE'/'OFF_SALE'）
+  productStatus: "" ,// 假设状态为枚举值（如 'ON_SALE'/'OFF_SALE'）
+  productImageUrl:"" // 假设有图片 URL 字段
 });
 
 
@@ -225,13 +265,13 @@ const handleSaveEdit = async () => {
     console.log("提交的修改数据：", editForm.value); // 调试输出
     const res = await updateProductAPI(editForm.value);
     
-    if (res.data.code === 200) {
+    if (res.code === 200) {
       ElMessage.success("修改成功！");
       isEditDialogVisible.value = false;
       // 刷新商品详情
       await getProductDetailAPI();
     } else {
-      ElMessage.error(`修改失败: ${res.data.results}`);
+      ElMessage.error(`修改失败: ${res.results}`);
     }
   } catch (error) {
     console.error("修改失败:", error);
@@ -250,10 +290,10 @@ const handleSaveEdit = async () => {
         // 假设从 localStorage 取用户信息，根据实际情况调整
         userUuid
       );
-      if (res.data.code === 200) {
+      if (res.code === 200) {
         ElMessage.success("购买成功！");
       } else {
-        ElMessage.error(`购买失败: ${res.data.results}`);
+        ElMessage.error(`购买失败: ${res.results}`);
       }
     } catch (error) {
       console.error("购买失败:", error);
@@ -271,8 +311,8 @@ const handleSaveEdit = async () => {
   const deleteProduct = async (productUuid) => {
     try {
       const res = await deleteProductAPI(productUuid);
-      if (res.data.code === 200) {
-        product.value = res.data.results;
+      if (res.code === 200) {
+        product.value = res.results;
         ElMessage.success("商品下架成功");
       } else {
         ElMessage.error("商品下架失败，请稍后重试");
@@ -288,9 +328,14 @@ const handleSaveEdit = async () => {
     const productUuid = route.params.productUuid;
     try {
       const res = await getProductDetailAPI(productUuid);
-      if (res.data.code === 200) {
-        product.value = res.data.results;
-      } else {
+      if (res.code === 200) {
+        product.value = res.results;
+      } else if(
+        res.code === 500 && res.results === "该商品库存为0"
+      ) {
+        product.value = null;
+      }
+      else {
         ElMessage.error("无法获取产品详情，请稍后重试");
       }
     } catch (error) {
@@ -300,6 +345,59 @@ const handleSaveEdit = async () => {
   });
 
 
+
+  // 自定义图片上传逻辑
+// 上传图片到后端（核心逻辑）
+const handleImageUpload = async (uploadReq) => {
+  isUploading.value = true;
+  console.log('📦 开始上传图片:', uploadReq);
+  const file = uploadReq.file; // 获取用户选择的文件
+  console.log('📦 准备上传的文件:', file);
+  // 校验：必须选择文件和填写自定义名称
+  if (!file) {
+    ElMessage.warning('请选择要上传的图片');
+    isUploading.value = false;
+
+  }
+  if (!customName.value.trim()) {
+    ElMessage.warning('请输入图片自定义名称');
+    isUploading.value = false;
+ 
+  }
+
+  try {
+    // 构造 FormData（与后端接口参数对应）
+    const formData = new FormData();
+    formData.append('file', file);           // 图片文件
+    formData.append('customName', customName.value); // 自定义名称
+    console.log('📦 待传的文件: file',file);
+    console.log('📦 待传的自定义名称: customName',customName.value);
+    // 调用后端上传接口（路径与你的 API 保持一致）
+    const res = await addProductPictureAPI(file,customName.value); 
+
+    // 处理响应（根据后端返回格式：{ code: 200, results: "图片URL" }）
+    if (res.code === 200) {
+      const imageUrl = res.results;
+      editForm.value.productImageUrl = imageUrl; // 回填到表单
+      fileList.value = [{ url: imageUrl }];     // 显示预览
+      ElMessage.success('图片上传成功！');
+    } else {
+      ElMessage.error(`上传失败: ${res.msg || '未知错误'}`);
+    }
+  } catch (error) {
+    ElMessage.error('上传时发生错误，请检查网络或文件大小');
+    console.error('图片上传失败：', error);
+  } finally {
+    isUploading.value = false;
+  }
+};
+
+// 移除图片时清空表单
+const handleImageRemove = () => {
+  editForm.value.productImageUrl = "";
+  fileList.value = [];
+  customName.value = "";
+};
 
   </script>
   
@@ -400,4 +498,15 @@ const handleSaveEdit = async () => {
       width: 100%;
     }
   }
+  /* 图片预览样式 */
+.image-preview {
+  margin-top: 8px;
+}
+.image-preview img {
+  width: 150px;
+  height: auto;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  object-fit: cover;
+}
   </style>

@@ -1,9 +1,9 @@
 
-
+import request from "../util/bankRequest";
 
 export const getLoanListByUserUuidAPI = async (userUuid) => {
   try {
-    return loadRequest.get('/loan-application-list', {
+    return request.get('/loan-application-list', {
       params: { userUuid: userUuid }
     })
   } catch (error) {
@@ -14,7 +14,7 @@ export const getLoanListByUserUuidAPI = async (userUuid) => {
 
 export const loadAdviceAPI = async (loanUuid,bankAdvice) => {
     try{
-       return  loadRequest.post('/checkLoan', null, {
+       return  request.post('/checkLoan', null, {
             params: { loanUuid, bankAdvice }
         });
     }
@@ -32,7 +32,7 @@ export const loadAdviceAPI = async (loanUuid,bankAdvice) => {
  * @returns {Promise} - 包含申请详情的 Promise
  */
 export const getLoanDetailAPIByLoadUuis = (loanApplicationUuid) => 
-     loadRequest.get("information", {
+  request.get("information", {
       params: { loanApplicationUuid }
     });
   
@@ -43,7 +43,7 @@ export const getLoanDetailAPIByLoadUuis = (loanApplicationUuid) =>
    * @returns {Promise} - 包含审核结果的 Promise
    */
   export const submitLoanAdviceAPI = (loanUuid, bankAdvice) => 
-    loadRequest.post("/bank/checkLoan", null, {
+    request.post("/bank/checkLoan", null, {
       params: { loanUuid, bankAdvice }
     });
   
@@ -53,6 +53,6 @@ export const getLoanDetailAPIByLoadUuis = (loanApplicationUuid) =>
    * @returns {Promise<boolean>} - 是否具有银行工作人员权限
    */
   export const checkBankRoleAPI = (userUuid) => 
-    loadRequest.get("/user/role", {
+    request.get("/user/role", {
       params: { userUuid }
-    }).then(loadRequest => loadRequest.data.role === "BANK");
+    }).then(loadRequest => loadRequest.role === "BANK");

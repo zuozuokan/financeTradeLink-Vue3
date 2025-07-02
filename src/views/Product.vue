@@ -23,7 +23,7 @@
     </div>
     <div>
       <el-row gutter="20">
-        <el-col :span="6" v-for="product in products" :key="product.productUuid">
+        <el-col :span="6" v-for="product in products" :key="product.productUuid" >
           <!-- 动态绑定卡片样式：根据商品分类 -->
           <el-card
             shadow="hover"
@@ -199,12 +199,12 @@ const filterByCategory = (category) => {
 const fetchProductList = async () => {
   try {
     const response = await getProductListAPI(request);
-    if (response.data.code === 200) {
-      const resultList = response.data.results;
+    if (response.code === 200) {
+      const resultList = response.results;
       allProducts.value = resultList; 
       products.value = resultList;
     } else {
-      console.error("获取商品列表失败:", response.data.message);
+      console.error("获取商品列表失败:", response.message);
     }
   } catch (error) {
     console.error("请求商品列表出错:", error);
@@ -288,13 +288,13 @@ const handleSaveAdd = async () => {
   try {
     // 构建请求参数（包含 userUuid 和 product 数据）
     const res = await addProductAPI(userUuid, addForm.value);
-    if (res.data.code === 200) {
+    if (res.code === 200) {
       ElMessage.success("商品新增成功！");
       isAddDialogVisible.value = false;
       // 刷新商品列表F
       await fetchProductList();
     } else {
-      ElMessage.error(`新增失败: ${res.data.message}`);
+      ElMessage.error(`新增失败: ${res.message}`);
     }
   } catch (error) {
     console.error("新增商品失败:", error);
@@ -337,13 +337,13 @@ const handleImageUpload = async (uploadReq) => {
     const res = await addProductPictureAPI(file,customName.value); 
 
     // 处理响应（根据后端返回格式：{ code: 200, results: "图片URL" }）
-    if (res.data.code === 200) {
-      const imageUrl = res.data.results; 
+    if (res.code === 200) {
+      const imageUrl = res.results;
       addForm.value.productImageUrl = imageUrl; // 回填到表单
       fileList.value = [{ url: imageUrl }];     // 显示预览
       ElMessage.success('图片上传成功！');
     } else {
-      ElMessage.error(`上传失败: ${res.data.msg || '未知错误'}`);
+      ElMessage.error(`上传失败: ${res.msg || '未知错误'}`);
     }
   } catch (error) {
     ElMessage.error('上传时发生错误，请检查网络或文件大小');

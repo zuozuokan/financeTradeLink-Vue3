@@ -38,31 +38,13 @@
         <span>农业知识库</span>
       </el-menu-item>
 
-        <el-sub-menu index="4">
-          <template #title>
-            <el-icon><ShoppingCart /></el-icon>
-            <span>购物指南</span>
-          </template>
-          <el-menu-item @click="router.push('/product')">农业商品</el-menu-item><!--Product大写啊-->
-           <!-- 新增：仅USER角色(只有农民可发布商品)可见的子目录 -->
-              <!-- <el-menu-item 
-                v-if="role1 === 'USER'" 
-                @click="router.push('/product/organic')"
-              >
-                商品发布
-              </el-menu-item> -->
-          <el-menu-item @click="router.push('/shopping-cart')">我的购物车</el-menu-item>
-          <el-menu-item @click="router.push('/order-checkout')">我的订单</el-menu-item>
-
-          
-        </el-sub-menu>
       <!-- 购物指南 -->
       <el-sub-menu index="4">
         <template #title>
           <el-icon class="menu-icon"><ShoppingCart /></el-icon>
           <span>购物指南</span>
         </template>
-        <el-menu-item index="4-1" @click="router.push('/prodect')">农业商品</el-menu-item>
+        <el-menu-item index="4-1" @click="router.push('/product')">农业商品</el-menu-item>
         <el-menu-item index="4-2" @click="router.push('/shopping-cart')">我的购物车</el-menu-item>
         <el-menu-item index="4-3" @click="router.push('/order-checkout')">我的订单</el-menu-item>
       </el-sub-menu>

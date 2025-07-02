@@ -53,7 +53,7 @@ request.interceptors.response.use(
         // 处理响应错误
         let message = error.message;
         if (error.response && error.response.data) {
-            message = error.response.data.msg || message;
+            message = error.response.msg || message;
         }
         // 可以在这里添加全局错误提示
         console.error("请求错误:", message);
