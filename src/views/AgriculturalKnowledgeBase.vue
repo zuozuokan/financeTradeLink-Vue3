@@ -19,7 +19,7 @@
     <el-row :gutter="20">
       <!-- 左侧：知识点列表 -->
       <el-col :span="16">
-        <el-card v-for="item in knowledgeList" :key="item.id" style="margin-bottom: 20px;">
+        <el-card v-for="item in knowledgeList" :key="item.id" style="margin-bottom: 20px;" class="el-card-body">
           <el-row>
             <el-col :span="4">
               <el-image :src="item.cover" style="width: 100px; height: 70px; object-fit: cover;" fit="cover" />
@@ -44,12 +44,13 @@
       <el-col :span="8">
         <el-card>
           <div style="font-weight: bold; font-size: 16px; margin-bottom: 10px;">热度榜单</div>
-          <el-list>
-            <el-list-item v-for="hot in hotList" :key="hot.id">
-              <span style="font-weight: 500;">{{ hot.title }}</span>
-              <el-tag size="small" type="warning" style="float: right;">热读 {{ hot.views }}</el-tag>
-            </el-list-item>
-          </el-list>
+          <div class="hot-list">
+            <div v-for="(hot, idx) in hotList" :key="hot.id" class="hot-item" :class="{ 'hot-top': idx === 0 }">
+              <span class="hot-rank" :class="{ 'hot-top-rank': idx === 0 }">{{ idx + 1 }}</span>
+              <span class="hot-title" :title="hot.title">{{ hot.title }}</span>
+              <el-tag size="small" type="warning" class="hot-views">热读 {{ hot.views }}</el-tag>
+            </div>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -65,7 +66,7 @@ const router = useRouter()
 // 搜索与分组
 const search = ref('')
 const selectedCategory = ref('')
-const categories = ref(['种植技术', '病虫害防治', '农机使用', '政策解读'])
+const categories = ref([])
 
 // 知识点列表
 const knowledgeList = ref([])
@@ -85,7 +86,16 @@ async function fetchKnowledge() {
     // 可加分页参数，如 params.page = 1, params.size = 20
     const res = await getKnowledgeListAPI(params)
     // 适配后端返回结构
-    const records = res.results?.records || []
+    let records = res.results?.records || []
+    // 前端本地模糊过滤（题目、分类、内容）
+    if (search.value) {
+      const kw = search.value.toLowerCase()
+      records = records.filter(item =>
+        (item.knowledgeTitle && item.knowledgeTitle.toLowerCase().includes(kw)) ||
+        (item.knowledgeCategory && item.knowledgeCategory.toLowerCase().includes(kw)) ||
+        (item.knowledgeContent && item.knowledgeContent.toLowerCase().includes(kw))
+      )
+    }
     // 字段适配
     knowledgeList.value = records.map(item => ({
       id: item.knowledgeId,
@@ -97,11 +107,18 @@ async function fetchKnowledge() {
       time: item.knowledgeCreatedTime,
       views: item.knowledgeViews
     }))
+    // 自动生成分类选项
+    const set = new Set()
+    knowledgeList.value.forEach(item => {
+      if (item.category) set.add(item.category)
+    })
+    categories.value = Array.from(set)
     // 热度榜单：按浏览量排序取前5
     hotList.value = [...knowledgeList.value].sort((a, b) => b.views - a.views).slice(0, 5).map(item => ({ id: item.id, title: item.title, views: item.views }))
   } catch (e) {
     knowledgeList.value = []
     hotList.value = []
+    categories.value = []
   }
 }
 
@@ -114,5 +131,42 @@ onMounted(fetchKnowledge)
   justify-content: space-between;
   align-items: center;
   padding: 6px 0;
+}
+.hot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hot-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 15px;
+}
+.hot-rank {
+  display: inline-block;
+  width: 22px;
+  text-align: center;
+  font-weight: bold;
+  color: #999;
+  margin-right: 8px;
+}
+.hot-top-rank {
+  color: #e67e22;
+  font-size: 18px;
+}
+.hot-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+.hot-top {
+  background: #fffbe6;
+  border-radius: 4px;
+}
+.hot-views {
+  margin-left: 4px;
 }
 </style>

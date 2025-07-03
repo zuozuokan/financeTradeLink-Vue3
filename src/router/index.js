@@ -99,7 +99,11 @@ const routes = [
   {
     path: '/knowledge/:id',
     name: 'KnowledgeDetail',
-    component: KnowledgeDetail
+    component: KnowledgeDetail,
+    meta: {
+      title: "知识详情",
+      hideSidebar: true, 
+    },
   },
   {
     path: "/expert-guide",

@@ -1,23 +1,32 @@
 <template>
     <div>
       <h2>融资申请管理</h2>
-      <el-table :data="applications" style="width: 100%; margin-top: 20px;">
-        <el-table-column prop="applicantName" label="申请人" width="120" />
-        <el-table-column prop="projectName" label="项目名称" width="180" />
-        <el-table-column prop="amount" label="申请金额" width="120" />
-        <el-table-column prop="status" label="状态" width="100">
+      <el-tabs v-model="activeTab" @tab-click="filterApplications">
+        <el-tab-pane label="未审核" name="pending" />
+        <el-tab-pane label="已审核" name="reviewed" />
+      </el-tabs>
+      <el-table :data="filteredApplications" style="width: 100%; margin-top: 20px;">
+        <el-table-column prop="loanApplicationUserUuid" label="申请人ID" width="120" />
+        <el-table-column prop="loanApplicationAmount" label="融资金额" width="120" />
+        <el-table-column prop="loanApplicationPurpose" label="用途" />
+        <el-table-column prop="loanApplicationRepayPlan" label="还款计划" />
+        <el-table-column label="状态" width="100">
           <template #default="scope">
-            <el-tag :type="scope.row.status === '待审核' ? 'warning' : (scope.row.status === '已通过' ? 'success' : 'danger')">
-              {{ scope.row.status }}
+            <el-tag :type="statusTagType(scope.row.loanApplicationStatus)">
+              {{ statusFormatter(scope.row) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="description" label="项目描述" />
-        <el-table-column prop="createTime" label="申请时间" width="180" />
+        <el-table-column prop="loanApplicationBankerUuid" label="处理银行人员ID" width="120" />
+        <el-table-column prop="loanApplicationCreatedTime" label="创建时间" width="180">
+          <template #default="scope">
+            {{ formatDateTime(scope.row.loanApplicationCreatedTime) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="180">
           <template #default="scope">
-            <el-button v-if="scope.row.status === '待审核'" size="small" type="success" @click="review(scope.row, '已通过')">通过</el-button>
-            <el-button v-if="scope.row.status === '待审核'" size="small" type="danger" @click="review(scope.row, '已拒绝')">拒绝</el-button>
+            <el-button v-if="scope.row.loanApplicationStatus === 'pending'" size="small" type="success" @click="review(scope.row, 'approved')">通过</el-button>
+            <el-button v-if="scope.row.loanApplicationStatus === 'pending'" size="small" type="danger" @click="review(scope.row, 'rejected')">拒绝</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -25,28 +34,53 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue'
-  // 你需要实现这些API
-  import { getFinancingApplications, reviewFinancingApplication } from '@/api/admin/adminFinancing'
+  import { ref, onMounted, computed } from 'vue'
+  import { getLoanApplications, reviewLoanApplication } from '@/api/admin/adminFinancing'
   
   const applications = ref([])
+  const activeTab = ref('pending')
   
-  function fetchApplications() {
-    // 示例数据，实际应调用API
-    applications.value = [
-      { id: 1, applicantName: '张三', projectName: '草莓种植扩建', amount: 50000, status: '待审核', description: '扩大草莓种植面积', createTime: '2024-06-01 10:00' },
-      { id: 2, applicantName: '李四', projectName: '蓝莓冷链物流', amount: 80000, status: '已通过', description: '建设冷链物流系统', createTime: '2024-06-02 09:00' }
-    ]
-    // getFinancingApplications().then(res => { applications.value = res.data })
+  const filteredApplications = computed(() => {
+    if (activeTab.value === 'pending') {
+      return applications.value.filter(a => a.loanApplicationStatus === 'pending')
+    } else {
+      return applications.value.filter(a => a.loanApplicationStatus !== 'pending')
+    }
+  })
+  
+  function statusFormatter(row) {
+    switch (row.loanApplicationStatus) {
+      case 'pending': return '待审核'
+      case 'approved': return '已通过'
+      case 'rejected': return '已拒绝'
+      default: return row.loanApplicationStatus
+    }
   }
   
-  function review(row, status) {
-    // reviewFinancingApplication(row.id, status).then(fetchApplications)
-    // 本地模拟：
-    const idx = applications.value.findIndex(a => a.id === row.id)
-    if (idx !== -1) {
-      applications.value[idx].status = status
+  function statusTagType(status) {
+    switch (status) {
+      case 'pending': return 'warning'
+      case 'approved': return 'success'
+      case 'rejected': return 'danger'
+      default: return ''
     }
+  }
+  
+  function formatDateTime(val) {
+    if (!val) return ''
+    const d = new Date(val)
+    const pad = n => n.toString().padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  }
+  
+  async function fetchApplications() {
+    const res = await getLoanApplications()
+    applications.value = res.results || []
+  }
+  
+  async function review(row, status) {
+    await reviewLoanApplication(row.loanApplicationUuid, status)
+    fetchApplications()
   }
   
   onMounted(fetchApplications)

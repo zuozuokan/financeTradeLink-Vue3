@@ -40,9 +40,7 @@ export const likeKnowledgeByUuid = (uuid) => {
 
 // 更新知识
 export const updateKnowledge = (uuid, updatedData) => {
-  return request.post(`/update/${uuid}`, updatedData, {
-    params: { uuid },
-  });
+  return request.post(`/update/${uuid}`, updatedData);
 };
 
 
