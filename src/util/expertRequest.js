@@ -55,7 +55,7 @@ request.interceptors.response.use(
         if (error.response && error.response.data) {
             message = error.response.msg || message;
         }
-        // 可以在这里添加全局错误提示
+        
         console.error("请求错误:", message);
         return Promise.reject(new Error(message));
     }

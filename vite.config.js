@@ -56,7 +56,7 @@ export default defineConfig({
         }
       },
 
-      // 用户服务知识模块代理
+      // 公共服务知识模块代理
       '/api/knowledge': {
         target: 'http://localhost:30011',
         changeOrigin: true,
@@ -84,7 +84,18 @@ export default defineConfig({
       '/api/bank':{
         target:'http://localhost:30020',
         changeOrigin:true
-      }
+      },
+
+      // 管理员服务代理
+      '/api/admin': {
+        target: 'http://localhost:30012',
+        changeOrigin: true,
+        rewrite: (path) => {
+          console.log('代理路径:', path); // 输出原始路径
+          return path;
+        }
+      },
+
 
     },
   },

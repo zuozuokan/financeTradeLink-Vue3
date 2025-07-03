@@ -111,8 +111,10 @@ const register = async () => {
   }
   if (activeTab.value === 'bank') {
     await registerBankAPI(registerForm.value.username, registerForm.value.password);
+    fetchUsers();
   } else if (activeTab.value === 'expert') {
     await registerExpertAPI(registerForm.value.username, registerForm.value.password);
+    fetchUsers();
   } else {
     ElMessage.warning('普通用户请在前台注册');
     return;

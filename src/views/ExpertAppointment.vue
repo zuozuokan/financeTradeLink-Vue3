@@ -41,6 +41,8 @@
                 <el-option label="待处理" value="pending" />
                 <el-option label="已接受" value="accepted" />
                 <el-option label="已拒绝" value="rejected" />
+                <el-option label="已完成" value="completed" />
+               
               </el-select>
               <span v-else class="agri-text">{{ translateConsultStatus(row.consultStatus) }}</span>
             </template>
@@ -152,6 +154,8 @@
       pending: "待处理",
       accepted: "已接受",
       rejected: "已拒绝",
+      completed: "已完成",
+      cancelled :"已取消",
     };
     return statusMap[status] || status;
   };

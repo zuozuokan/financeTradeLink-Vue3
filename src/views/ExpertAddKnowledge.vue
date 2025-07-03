@@ -97,7 +97,7 @@
         ElMessage.success("发布成功");
         resetForm();
       } else {
-        ElMessage.error("发布失败");
+        ElMessage.error("发布失败"+res.data.results);
       }
     });
   };

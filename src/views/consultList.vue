@@ -309,7 +309,7 @@ const enableEdit = (row) => {
           (item) => item.consultUuid !== row.consultUuid
         );
       } else {
-        ElMessage.error("删除失败");
+        ElMessage.error("删除失败"+res.data.results);
       }
     } catch (error) {
       ElMessage.error("删除失败：" + error.message);
@@ -324,7 +324,7 @@ const enableEdit = (row) => {
         currentConsult.value = res.results;
         dialogVisible.value = true;
       } else {
-        ElMessage.error("获取预约详情失败");
+        ElMessage.warning("获取预约详情失败"+res.data.results);
       }
     } catch (error) {
       ElMessage.error("获取预约详情失败：" + error.message);
@@ -347,7 +347,7 @@ const enableEdit = (row) => {
       
       expertDialogVisible.value = true;
     } else {
-      ElMessage.error("获取专家信息失败");
+      ElMessage.error("获取专家信息失败"+res.data.results);
     }
   } catch (error) {
     ElMessage.error("获取专家信息失败：" + error.message);
