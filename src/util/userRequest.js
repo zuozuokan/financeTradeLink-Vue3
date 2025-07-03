@@ -3,11 +3,11 @@ import { de } from "element-plus/es/locales.mjs";
 
 const request = axios.create({
   // 网关路径
-  // baseURL: "/project-user/api/user",
+  baseURL: "/project-user/api/user",
   // "project-base" 是网关路径,可以在后端代码gateway的bootstrap.yml中查看
  
   // 非网关路径（其他微服务，同理）
-  baseURL: '/api/user',
+  // baseURL: '/api/user',
   timeout: 5000,
 });
 

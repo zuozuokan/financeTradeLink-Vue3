@@ -1,7 +1,7 @@
 import request from "../util/knowledgeRequest";
 
 // 发布知识
-export const addKnowledge = (knowledge) => request.post("/", knowledge);
+export const addKnowledge = (knowledge) => request.post("/add", knowledge);
 // 获取知识列表
 export const getKnowledgeList = (page, size, category = "", keyword = "") => {
   // page是页码

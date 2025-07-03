@@ -301,7 +301,7 @@ const handleSaveEdit = async () => {
     }
   } catch (error) {
     console.error("修改失败:", error);
-    ElMessage.error("修改时发生错误，请稍后重试");
+    ElMessage.error(res.results);
   } finally {
     isSaving.value = false;
   }
@@ -323,7 +323,7 @@ const handleSaveEdit = async () => {
       }
     } catch (error) {
       console.error("购买失败:", error);
-      ElMessage.error("购买时发生错误，请稍后重试");
+      ElMessage.error(res.results);
     }
   };
   
@@ -341,11 +341,11 @@ const handleSaveEdit = async () => {
         product.value = res.results;
         ElMessage.success("商品下架成功");
       } else {
-        ElMessage.error("商品下架失败，请稍后重试");
+        ElMessage.error("商品下架失败，请稍后重试"+res.results);
       }
     } catch (error) {
       console.error("下架商品失败:", error);
-      ElMessage.error("下架商品时发生错误，请稍后重试");
+      ElMessage.error(res.results);
     }
   };
   
@@ -362,11 +362,11 @@ const handleSaveEdit = async () => {
         product.value = null;
       }
       else {
-        ElMessage.error("无法获取产品详情，请稍后重试");
+        ElMessage.error(res.results);
       }
     } catch (error) {
       console.error("获取产品详情失败:", error);
-      ElMessage.error("加载产品详情时发生错误，请稍后重试");
+      ElMessage.error(res.results);
     }
   });
 

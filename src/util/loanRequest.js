@@ -2,11 +2,11 @@ import axios from "axios";
 
 const request = axios.create({
   // 网关路径
-  // baseURL: "/project-user/api/application",
+  baseURL: "/project-user/api/application",
   // "project-user" 是网关路径,可以在后端代码gateway的bootstrap.yml中查看
   //非网关多端口转发
  
-  baseURL: '/api/application',
+  // baseURL: '/api/application',
   timeout: 5000,
 });
 

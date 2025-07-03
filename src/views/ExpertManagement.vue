@@ -222,7 +222,7 @@
         ElMessage.warning("请完善您的专家信息");
       }
     } catch (error) {
-      ElMessage.error("获取专家信息失败");
+      ElMessage.error(res.results);
     }
   };
   

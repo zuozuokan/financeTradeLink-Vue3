@@ -2,8 +2,8 @@ import axios from "axios";
 
 const request = axios.create({
     // 网关路径
-    // baseURL: "/project-admin/api/admin",
-    baseURL: '/api/admin',
+    baseURL: "/project-admin/api/admin",
+    // baseURL: '/api/admin',
     timeout: 5000,
 });
 
