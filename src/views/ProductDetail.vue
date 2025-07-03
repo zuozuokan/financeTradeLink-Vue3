@@ -20,7 +20,23 @@
             <p>价格: ¥{{ product.productPrice || "未提供" }}</p>
             <p>描述: {{ product.productDescription || "未提供" }}</p>
             <p>库存: {{ product.productStock || "未提供" }}</p>
-            <p>产品状态: {{ product.productStatus || "未提供" }}</p>
+            <p>
+              产品状态:
+              <el-tag
+                :type="product.productStatus === 'enabled' ? 'success' : (product.productStatus === 'disabled' ? 'danger' : (product.productStatus === 'pending' ? 'info' : 'info'))"
+                effect="dark"
+              >
+                {{
+                  product.productStatus === 'enabled'
+                    ? '在售'
+                    : product.productStatus === 'disabled'
+                      ? '已下架'
+                      : product.productStatus === 'pending'
+                        ? '未上架'
+                        : (product.productStatus || '未知')
+                }}
+              </el-tag>
+            </p>
             <p>发布时间: {{ formatTime(product.productCreatedTime) }}</p>
           </div>
   
@@ -44,9 +60,17 @@
               type="primary"
               @click="handlePurchase"
               size="large"
-              :disabled="!product.productStock || product.productStock <= 0"
+              :disabled="!product.productStock || product.productStock <= 0 || product.productStatus !== 'enabled'"
             >
               立即购买
+            </el-button>
+            <el-button
+              type="success"
+              @click="handleAddToCart"
+              size="large"
+              :disabled="!product.productStock || product.productStock <= 0 || product.productStatus !== 'enabled'"
+            >
+              加入购物车
             </el-button>
             <el-button
                 type="info"
@@ -167,6 +191,8 @@
   import { useRoute } from "vue-router";
   import { getProductDetailAPI,deleteProductAPI, updateProductAPI ,addProductPictureAPI} from "../api/product";
   import {   purchaseProductAPI } from "../api/order";
+  import { addToCartAPI } from '@/api/cart'
+  
   import { ElMessage, ElImage, ElInputNumber, ElButton , ElDialog, ElForm, ElFormItem, ElInput, ElSelect, ElOption,  ElMessageBox } from "element-plus";
  
   import dayjs from "dayjs";
@@ -397,6 +423,27 @@ const handleImageRemove = () => {
   editForm.value.productImageUrl = "";
   fileList.value = [];
   customName.value = "";
+};
+
+// 加入购物车
+const handleAddToCart = async () => {
+  try {
+    const cartList = [{
+      cartProductUuid: product.value.productUuid,
+      cartQuantity: amount.value
+    }];
+    const res = await addToCartAPI({
+      userUuid,
+      cartList
+    });
+    if (res.code === 200) {
+      ElMessage.success('已加入购物车');
+    } else {
+      ElMessage.error(res.msg || '加入购物车失败');
+    }
+  } catch (e) {
+    ElMessage.error('加入购物车失败，请稍后再试');
+  }
 };
 
   </script>

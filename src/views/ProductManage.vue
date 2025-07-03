@@ -90,7 +90,7 @@ import {
   deleteProductAPI,
   updateProductAPI,
   getProductListByuuidAPI,
-  getProductByUuidAndCategoryAPI
+  getProductByUuidAndCategoryAPI,
 } from "@/api/product";
 
 const token = localStorage.getItem("token");
@@ -162,6 +162,24 @@ const submitEditForm = async () => {
   ElMessage.success("更新成功");
   editDialogVisible.value = false;
   loadProducts();
+};
+
+// 添加到购物车
+const addToCart = async (row) => {
+  try {
+    const res = await addToCartAPI({
+      productUuid: row.productUuid,
+      quantity: 1,
+      userUuid: uuid
+    });
+    if (res.code === 200) {
+      ElMessage.success('已添加到购物车');
+    } else {
+      ElMessage.error(res.msg || '添加失败');
+    }
+  } catch (e) {
+    ElMessage.error('添加失败，请稍后再试');
+  }
 };
 
 onMounted(() => {
