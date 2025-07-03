@@ -19,6 +19,15 @@ export const getKnowledgeByUuid = (uuid) => {
     },
   });
 };
+// 通过userUuid获取自己发布的知识
+export const getKnowledgeListAPI = (userUuid) => {
+  return request.post(`/getKnowledgeByUserUuid`, null,{
+    params: {
+      userUuid:userUuid,
+    },
+  });
+};
+
 
 // 通过知识的uuid删除知识
 export const delKnowledgeByUuid = (uuid) => {
@@ -31,9 +40,17 @@ export const delKnowledgeByUuid = (uuid) => {
 
 // 点赞知识
 export const likeKnowledgeByUuid = (uuid) => {
-  return request.post(`/like/${uuid}`, {
+  return request.post(`/like`, null,{
     params: {
-      uuid,
+      knowledgeUuid:uuid,
+    },
+  });
+};
+// 点赞知识
+export const viewKnowledgeByUuid = (uuid) => {
+  return request.post(`/view`,null, {
+    params: {
+      knowledgeUuid:uuid,
     },
   });
 };

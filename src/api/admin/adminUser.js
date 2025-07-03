@@ -1,7 +1,4 @@
-import request from "../../util/userRequest";
-
-
-
+import request from "../../util/adminRequest";
 // 获取所有银行用户
 export const getAllBanksAPI = () => request.get('/find-all-banks');
 
