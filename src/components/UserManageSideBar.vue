@@ -55,20 +55,43 @@
       </el-menu-item>
     </el-sub-menu>
 
-    <!-- 专家指导 -->
-        <el-sub-menu index="5">
-      <template #title>
-        <el-icon><Guide /></el-icon>
-        <span>专家问答</span>
-      </template>
-      <el-menu-item @click="router.push('/expert-guide')">预约咨询</el-menu-item>
-      <el-menu-item @click="router.push('/consult-list')">我的预约管理</el-menu-item>
-    </el-sub-menu>
-  </el-menu>
+<!-- 专家指导 -->
+<el-sub-menu index="5">
+  <template #title>
+    <div class="menu-item-content">
+      <el-icon class="menu-icon"><Guide /></el-icon>
+      <span class="menu-text">专家问答</span>
+    </div>
+  </template>
+  <el-menu-item @click="router.push('/expert-guide')">预约咨询</el-menu-item>
+  <el-menu-item @click="router.push('/consult-list')">我的预约管理</el-menu-item>
+</el-sub-menu>
+
+<!-- 返回首页 -->
+<el-menu-item index="/home" @click="router.push('/home')">
+  <template #title>
+    <div class="menu-item-content">
+      <el-icon class="menu-icon"><HomeFilled /></el-icon>
+      <span class="menu-text">返回首页</span>
+    </div>
+  </template>
+</el-menu-item>
+
+<!-- 退出登录 -->
+<el-menu-item index="logout" @click="logout">
+  <template #title>
+    <div class="menu-item-content">
+      <el-icon class="menu-icon"><SwitchButton /></el-icon>
+      <span class="menu-text">退出登录</span>
+    </div>
+  </template>
+</el-menu-item>
+   </el-menu>
+
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref ,watch} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
   User,
@@ -76,11 +99,26 @@ import {
   Coin,
   Notebook,
   Guide,
+  HomeFilled,
+  SwitchButton,
 } from '@element-plus/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
 const activeIndex = ref(route.path);
+import { ElMessage } from 'element-plus';
+// 退出登录功能
+const logout = () => {
+  // 清除用户认证信息（根据实际项目调整）
+  localStorage.removeItem('expertToken');
+  sessionStorage.removeItem('expertSession');
+  
+  // 跳转到登录页
+  router.push('/user-login');
+  
+  // 提示用户
+  ElMessage.success('您已成功退出登录');
+};
 </script>
 
 <style scoped lang="scss">
