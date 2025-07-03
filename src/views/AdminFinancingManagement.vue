@@ -53,6 +53,7 @@
       case 'pending': return '待审核'
       case 'approved': return '已通过'
       case 'rejected': return '已拒绝'
+      case 'cancelled':return '已取消'
       default: return row.loanApplicationStatus
     }
   }

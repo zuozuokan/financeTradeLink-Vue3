@@ -115,7 +115,7 @@
 import UserManageSideBar from "@/components/UserManageSideBar.vue";
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { getKnowledgeList, delKnowledgeByUuid, updateKnowledge } from "@/api/knowledge";
+import { getKnowledgeList, delKnowledgeByUuid, updateKnowledge,getKnowledgeListAPI } from "@/api/knowledge";
 import { jwtDecode } from "jwt-decode";
 
 const token = localStorage.getItem("token");
@@ -126,7 +126,7 @@ const knowledgeList = ref([]);
 const originalMap = ref({});
 
 const fetchList = async () => {
-  const res = await getKnowledgeList(1, 100, "", "");
+  const res = await getKnowledgeListAPI(userUuid);
   if (res.code === 200) {
     const records = res.results?.records || [];
     knowledgeList.value = records.map((k) => ({ ...k, isEditing: false }));

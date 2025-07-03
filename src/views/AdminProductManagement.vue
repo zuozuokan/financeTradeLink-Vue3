@@ -15,23 +15,13 @@
       <el-table-column prop="productUserUuid" label="发布者ID" width="180" />
       <el-table-column prop="productStatus" label="状态" width="100">
         <template #default="scope">
-          <el-tag :type="scope.row.productStatus === 'enabled' ? 'success' : (scope.row.productStatus === 'disabled' ? 'danger' : 'info')">
-            {{
-              scope.row.productStatus === 'enabled'
-                ? '上架'
-                : scope.row.productStatus === 'disabled'
-                  ? '已下架'
-                  : scope.row.productStatus === 'pending'
-                    ? '未上架'
-                    : scope.row.productStatus
-            }}
-          </el-tag>
+          <el-tag>{{ scope.row.productStatus }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="180">
         <template #default="scope">
           <el-button size="small" type="primary"
-            v-if="scope.row.productStatus === 'disabled' || scope.row.productStatus === 'pending'"
+            v-if="scope.row.productStatus === 'disabled'"
             @click="toggleStatus(scope.row)">上架</el-button>
           <el-button size="small" type="warning"
             v-else
