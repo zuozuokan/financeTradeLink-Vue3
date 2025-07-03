@@ -84,7 +84,6 @@ const submitForm = () => {
         loanApplicationStatus: "pending",
       };
       const res = await addLoanApplication(userUuid, loanApplication);
-
       if (res.code === 200) {
         ElMessage.success("融资申请提交成功");
         resetForm();

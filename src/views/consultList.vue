@@ -249,8 +249,9 @@ import {
           res.results.map((c) => [c.consultUuid, { ...c }])
         );
       } else {
-        ElMessage.error("加载预约列表失败");
+        ElMessage.warning(res.results);
       }
+
     } catch (error) {
       ElMessage.error("加载预约列表失败：" + error.message);
     }

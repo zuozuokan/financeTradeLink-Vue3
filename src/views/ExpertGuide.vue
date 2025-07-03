@@ -217,6 +217,7 @@ import {
     addConsultAPI 
 } from "@/api/consult";
 import { jwtDecode } from "jwt-decode";
+import { ElMessage } from "element-plus";
 
 const token = localStorage.getItem("token");
 const payload = jwtDecode(token);
@@ -254,7 +255,7 @@ const loadExperts = async () => {
         if (response.code === 200) {
             experts.value = response.results;
         } else {
-            console.error('获取专家列表失败:', response.msg);
+            console.error('获取专家列表失败:', response.results);
             
         }
     } catch (error) {
@@ -340,17 +341,21 @@ const submitBooking = async () => {
         };
         
         const response = await addConsultAPI(userUuid, consultData);
-        
+        console.log("res:",response)
         if (response.code === 200) {
-            alert(`预约提交成功！\n\n专家: ${selectedExpert.value.expertName}`);
+            // alert(`预约提交成功！\n\n专家: ${selectedExpert.value.expertName}`);
+            ElMessage.success(`预约提交成功！\n\n专家: ${selectedExpert.value.expertName}`)
             closeBookingModal();
         } else {
-            console.error('预约提交失败:', response.msg);
-            alert('预约提交失败，请稍后再试');
+          // console.log("res.results:",response.results)
+            ElMessage.error(`预约提交失败:${response.results}`)
+            // console.error('预约提交失败:', response.results);
+            // alert('预约提交失败，请稍后再试');
         }
     } catch (error) {
-        console.error('提交预约出错:', error);
-        alert('请求出错，请检查网络连接');
+      ElMessage.error('预约提交失败:',error)
+        // console.error('提交预约出错:', error);
+        // alert('请求出错，请检查网络连接');
     }
 }
   </script>
