@@ -28,8 +28,8 @@ export const removeCartItemAPI = (cartItemId) =>
   });
 
 // 批量删除购物车商品
-export const batchRemoveCartItemsAPI = (cartItemIds) =>
-  request.post('/batch-remove', cartItemIds);
+export const batchRemoveCartItemsAPI = (cartItemUuids) =>
+  request.post('/delete', cartItemUuids);
 
 // 刷新商品缓存
 export const refreshCartCacheAPI = (cartList) =>

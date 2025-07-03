@@ -1,9 +1,10 @@
 <template>
   <div>
     <el-card>
-      <el-tabs v-model="activeTab" @tab-click="fetchOrders">
+      <el-tabs v-model="activeTab" @tab-click="onTabChange">
         <el-tab-pane label="待支付" name="pending" />
         <el-tab-pane label="已完成" name="completed" />
+        <el-tab-pane label="配送中" name="delivering" />
         <el-tab-pane label="已取消" name="cancelled" />
       </el-tabs>
       <div style="margin: 15px 0; display: flex; justify-content: flex-end;">
@@ -12,13 +13,44 @@
       </div>
       <el-table :data="orderList" @selection-change="handleSelectionChange" style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="orderNo" label="订单号" width="180" />
-        <el-table-column prop="status" label="状态" width="100" />
-        <el-table-column prop="total" label="总价" width="100" />
-        <el-table-column prop="createdTime" label="下单时间" width="180" />
-        <el-table-column label="操作" width="120">
+        <el-table-column prop="orderProductName" label="商品名称" width="180" />
+        <el-table-column prop="orderQuantity" label="数量" width="80" />
+        <el-table-column prop="orderUuid" label="订单号" width="180" />
+        <el-table-column prop="orderStatus" label="状态" width="100">
           <template #default="scope">
-            <el-button type="text" @click="goDetail(scope.row)">详情</el-button>
+            <el-tag
+              :type="scope.row.orderStatus === 'pending' ? 'warning' : (scope.row.orderStatus === 'completed' ? 'success' : (scope.row.orderStatus === 'delivering' ? 'primary' : (scope.row.orderStatus === 'cancelled' ? 'info' : '')) )"
+            >
+              {{
+                scope.row.orderStatus === 'pending'
+                  ? '待支付'
+                  : scope.row.orderStatus === 'completed'
+                    ? '已完成'
+                    : scope.row.orderStatus === 'delivering'
+                      ? '配送中'
+                      : scope.row.orderStatus === 'cancelled'
+                        ? '已取消'
+                        : scope.row.orderStatus
+              }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="orderTotalPrice" label="总价" width="100" />
+        <el-table-column prop="orderCreatedTime" label="下单时间" width="180">
+          <template #default="scope">
+            {{ formatDate(scope.row.orderCreatedTime) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="240">
+          <template #default="scope">
+            <el-button type="primary" size="small" style="border-radius: 8px; margin-right: 8px;" @click="goDetail(scope.row)">详情</el-button>
+            <el-button
+              v-if="scope.row.orderStatus === 'delivering'"
+              type="success"
+              size="small"
+              style="border-radius: 8px; font-weight: 500; box-shadow: 0 2px 8px rgba(46,204,113,0.08);"
+              @click="() => confirmReceive(scope.row)"
+            >确认收货</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -29,6 +61,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { getOrderListByUserUuidAPI, updateOrderStatusAPI } from '@/api/order'
+import { getProductDetailAPI } from '@/api/product'
+import dayjs from 'dayjs'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const activeTab = ref('pending')
@@ -39,38 +75,69 @@ function handleSelectionChange(val) {
   selected.value = val
 }
 
-function fetchOrders() {
-  // 模拟数据，后续可用API替换
-  const all = [
-    { id: 1, orderNo: '20240601001', status: '待支付', total: 120, createdTime: '2024-06-01 10:00' },
-    { id: 2, orderNo: '20240601002', status: '已完成', total: 80, createdTime: '2024-06-01 11:00' },
-    { id: 3, orderNo: '20240601003', status: '已取消', total: 50, createdTime: '2024-06-01 12:00' }
-  ]
-  orderList.value = all.filter(o => {
-    if (activeTab.value === 'pending') return o.status === '待支付'
-    if (activeTab.value === 'completed') return o.status === '已完成'
-    if (activeTab.value === 'cancelled') return o.status === '已取消'
-    return true
-  })
+async function fetchOrders() {
+  const res = await getOrderListByUserUuidAPI()
+  let orders = []
+  if (res.code === 200) {
+    if (Array.isArray(res.results)) {
+      orders = res.results
+    } else if (res.results && typeof res.results === 'object') {
+      orders = Object.values(res.results)
+    }
+    // 并发查商品名
+    orders = await Promise.all(orders.map(async order => {
+      let productName = ''
+      try {
+        const productRes = await getProductDetailAPI(order.orderProductUuid)
+        productName = productRes.results?.productName || ''
+      } catch {}
+      return { ...order, orderProductName: productName }
+    }))
+    orderList.value = orders.filter(o => o.orderStatus === activeTab.value)
+  } else {
+    orderList.value = []
+  }
   selected.value = []
 }
 
-function batchDelete() {
-  orderList.value = orderList.value.filter(item => !selected.value.includes(item))
+async function batchDelete() {
+  await Promise.all(selected.value.map(sel =>
+    updateOrderStatusAPI(sel.orderUuid, { orderStatus: 'cancelled' })
+  ))
+  await fetchOrders()
   selected.value = []
 }
 
-function batchPay() {
-  // 可调用API批量支付
-  alert('批量支付功能待接入API')
+async function batchPay() {
+  await Promise.all(selected.value.map(sel =>
+    updateOrderStatusAPI(sel.orderUuid, { orderStatus: 'delivering' })
+  ))
+  await fetchOrders()
+  selected.value = []
 }
 
 function goDetail(row) {
-  router.push(`/order-detail/${row.id}`)
+  router.push(`/order-detail/${row.orderUuid}`)
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return ''
+  return dayjs(dateStr).format('YYYY-MM-DD HH:mm:ss')
+}
+
+function onTabChange() {
+  fetchOrders()
+}
+
+async function confirmReceive(row) {
+  await updateOrderStatusAPI(row.orderUuid, { orderStatus: 'completed' })
+  ElMessage.success('已确认收货，订单已完成')
+  await fetchOrders()
 }
 
 onMounted(fetchOrders)
 </script>
+
 
 <style scoped>
 </style>

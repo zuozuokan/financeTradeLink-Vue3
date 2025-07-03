@@ -10,16 +10,17 @@ export const purchaseProductAPI = (productUuid,amounts,userUuid) =>
   });
 
 
-export const getOrderListByUserUuidAPI = (userUuid) => request.get("/my", {
-    params: {
-        userUuid: userUuid
-    },
-  });
+export const getOrderListByUserUuidAPI = () => request.get('/my');
 
-  export const getOrderDetailAPI = (orderUuid) => {
-    return request.get(`/${orderUuid}`);
-  };
-  // 根据用户的uuid获取农产品列表
+export const getOrderDetailAPI = (orderUuid) => {
+  return request.get(`/${orderUuid}`);
+};
+
+// 更新订单状态
+export const updateOrderStatusAPI = (orderUuid, order) =>
+  request.put('/update/orderUuid', order, {
+    params: { Uuid: orderUuid }
+  });
 
 
   

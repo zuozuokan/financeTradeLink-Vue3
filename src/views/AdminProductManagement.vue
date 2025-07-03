@@ -15,13 +15,23 @@
       <el-table-column prop="productUserUuid" label="发布者ID" width="180" />
       <el-table-column prop="productStatus" label="状态" width="100">
         <template #default="scope">
-          <el-tag>{{ scope.row.productStatus }}</el-tag>
+          <el-tag :type="scope.row.productStatus === 'enabled' ? 'success' : (scope.row.productStatus === 'disabled' ? 'danger' : 'info')">
+            {{
+              scope.row.productStatus === 'enabled'
+                ? '上架'
+                : scope.row.productStatus === 'disabled'
+                  ? '已下架'
+                  : scope.row.productStatus === 'pending'
+                    ? '未上架'
+                    : scope.row.productStatus
+            }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="180">
         <template #default="scope">
           <el-button size="small" type="primary"
-            v-if="scope.row.productStatus === 'disabled'"
+            v-if="scope.row.productStatus === 'disabled' || scope.row.productStatus === 'pending'"
             @click="toggleStatus(scope.row)">上架</el-button>
           <el-button size="small" type="warning"
             v-else
@@ -53,14 +63,9 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="editProduct.productStatus">
-            <el-option label="上架" value="ON_SALE" />
-            <el-option label="下架" value="disabled" />
-            <el-option label="热销" value="Best-selling" />
-            <el-option label="限时折扣" value="限时折扣" />
-            <el-option label="手慢无" value="手慢无" />
-            <el-option label="pending" value="pending" />
-            <el-option label="enabled" value="enabled" />
-            <el-option label="disabled" value="disabled" />
+            <el-option label="上架" value="enabled" />
+            <el-option label="已下架" value="disabled" />
+            <el-option label="未上架" value="pending" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -86,8 +91,8 @@ async function fetchProducts() {
 }
 
 async function toggleStatus(row) {
-  if (row.productStatus === 'disabled') {
-    await updateProductStatus(row.productUuid, 'ON_SALE')
+  if (row.productStatus === 'disabled' || row.productStatus === 'pending') {
+    await updateProductStatus(row.productUuid, 'enabled')
   } else {
     await updateProductStatus(row.productUuid, 'disabled')
   }

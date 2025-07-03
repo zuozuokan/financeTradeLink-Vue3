@@ -81,6 +81,10 @@ export default defineConfig({
         target:'http://localhost:30000',
         changeOrigin:true
       },
+      '/api/cart':{
+        target:'http://localhost:30011',
+        changeOrigin:true
+      },
       '/api/bank':{
         target:'http://localhost:30020',
         changeOrigin:true
