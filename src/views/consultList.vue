@@ -180,10 +180,8 @@
     updateConsultStatusAPI,
     getConsultDetailAPI,
     deleteConsultAPI,
-} from "@/api/consult.js";
-import {
     getExpertInfoAPI,
-} from "@/api/expert.js";
+} from "@/api/consult.js";
 import {
     userGetCurrentInfoAPI,
 }from "@/api/user.js"

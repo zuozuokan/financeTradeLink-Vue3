@@ -10,12 +10,16 @@ export default defineConfig({
     open: true, // 启动时自动打开浏览器
 
     // 若启用网关，则用以下配置
-    // proxy: {
-    //   "/project": {
-    //     target: "http://localhost:9999", //
-    //     changeOrigin: true, // 是否改变源
-    //   },
-    // },
+    proxy: {
+      "/project": {
+        target: "http://localhost:9999", //
+        changeOrigin: true, // 是否改变源
+        rewrite: (path) => {
+              console.log('代理路径:', path); // 输出原始路径
+              return path;
+              },
+      },
+    },
     // 若不启用网关，则使用以下配置
     // proxy: {
     //   '/api': {
@@ -24,84 +28,84 @@ export default defineConfig({
     //   }
     // },    
     //不启用网关，端口治理
-    proxy: {
-      // 咨询服务代理
-      '/api/user/consult': {
-        target: 'http://localhost:30000',
-        changeOrigin: true,
+    // proxy: {
+    //   // 咨询服务代理
+    //   '/api/user/consult': {
+    //     target: 'http://localhost:30000',
+    //     changeOrigin: true,
 
-      },
+    //   },
 
-      // 专家服务代理
-      '/api/expert': {
-        target: 'http://localhost:9392',
-        changeOrigin: true,
+    //   // 专家服务代理
+    //   '/api/expert': {
+    //     target: 'http://localhost:9392',
+    //     changeOrigin: true,
 
-      },
+    //   },
 
-      // 注册登录服务代理
-      '/api/register-login': {
-        target: 'http://localhost:30011',
-        changeOrigin: true,
+    //   // 注册登录服务代理
+    //   '/api/register-login': {
+    //     target: 'http://localhost:30011',
+    //     changeOrigin: true,
 
-      },
+    //   },
 
-      // 用户服务代理
-      '/api/user': {
-        target: 'http://localhost:30000',
-        changeOrigin: true,
-        rewrite: (path) => {
-          console.log('代理路径:', path); // 输出原始路径
-          return path;
-        }
-      },
+    //   // 用户服务代理
+    //   '/api/user': {
+    //     target: 'http://localhost:30000',
+    //     changeOrigin: true,
+    //     rewrite: (path) => {
+    //       console.log('代理路径:', path); // 输出原始路径
+    //       return path;
+    //     }
+    //   },
 
-      // 公共服务知识模块代理
-      '/api/knowledge': {
-        target: 'http://localhost:30011',
-        changeOrigin: true,
-        rewrite: (path) => {
-          console.log('代理路径:', path); // 输出原始路径
-          return path;
-        }
-      },
+    //   // 公共服务知识模块代理
+    //   '/api/knowledge': {
+    //     target: 'http://localhost:30011',
+    //     changeOrigin: true,
+    //     rewrite: (path) => {
+    //       console.log('代理路径:', path); // 输出原始路径
+    //       return path;
+    //     }
+    //   },
 
-      // 用户服务融资模块代理
-      '/api/application': {
-        target: 'http://localhost:30000',
-        changeOrigin: true,
-      },
+    //   // 用户服务融资模块代理
+    //   '/api/application': {
+    //     target: 'http://localhost:30000',
+    //     changeOrigin: true,
+    //   },
 
-      // 用户服务产品模块代理
-      '/api/product': {
-        target: 'http://localhost:30000',
-        changeOrigin: true,
-      },
-      '/api/order':{
-        target:'http://localhost:30000',
-        changeOrigin:true
-      },
-      '/api/cart':{
-        target:'http://localhost:30011',
-        changeOrigin:true
-      },
-      '/api/bank':{
-        target:'http://localhost:30020',
-        changeOrigin:true
-      },
+    //   // 用户服务产品模块代理
+    //   '/api/product': {
+    //     target: 'http://localhost:30000',
+    //     changeOrigin: true,
+    //   },
+    //   '/api/order':{
+    //     target:'http://localhost:30000',
+    //     changeOrigin:true
+    //   },
+    //   '/api/cart':{
+    //     target:'http://localhost:30011',
+    //     changeOrigin:true
+    //   },
+    //   '/api/bank':{
+    //     target:'http://localhost:30020',
+    //     changeOrigin:true
+    //   },
 
-      // 管理员服务代理
-      '/api/admin': {
-        target: 'http://localhost:30012',
-        changeOrigin: true,
-        rewrite: (path) => {
-          console.log('代理路径:', path); // 输出原始路径
-          return path;
-        }
-      },
+    //   // 管理员服务代理
+    //   '/api/admin': {
+    //     target: 'http://localhost:30012',
+    //     changeOrigin: true,
+    //     rewrite: (path) => {
+    //       console.log('代理路径:', path); // 输出原始路径
+    //       return path;
+    //     }
+    //   },
 
 
-    },
+    // },
       
   },
   resolve: {

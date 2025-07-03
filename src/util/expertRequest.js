@@ -3,10 +3,10 @@ import axios from "axios";
 
 const request = axios.create({
     // 网关路径
-    // baseURL: "/project-user/api/expert",
+    baseURL: "/project-expert/api/expert",
     //非网关多端口转发
     // baseURL:"http://localhost:9392/api/expert",
-    baseURL: "/api/expert",
+    // baseURL: "/api/expert",
     timeout: 10000,
 });
 
@@ -18,6 +18,8 @@ request.interceptors.request.use(
         if (token) {
             config.headers = {
                 ...config.headers,
+                // 添加 token 到请求头
+                token: localStorage.getItem("token"),
                 Authorization: `Bearer ${token}`
             };
         }

@@ -49,7 +49,13 @@ export const getExpertListAPI = (userUuid) =>
             userUuid,
         },
     });
-
+// 获取专家详情
+export const getExpertInfoAPI = (expertUserUuid) =>
+    request.get("/expert-info", {
+        params: {
+            expertUserUuid: expertUserUuid
+        }
+    });
 // 获取单个咨询预约详情
 export const getConsultDetailAPI = (consultUuid) =>
     request.get("/detail", {

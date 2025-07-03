@@ -2,10 +2,10 @@ import axios from "axios";
 
 const request = axios.create({
     // 网关路径
-    // baseURL: "/project-user/api/user/consult",
+    baseURL: "/project-user/api/user/consult",
     //非网关多端口转发
     // baseURL:"http://localhost:30000/api/user/consult",
-    baseURL: '/api/user/consult',
+    // baseURL: '/api/user/consult',
     timeout: 5000,
 });
 

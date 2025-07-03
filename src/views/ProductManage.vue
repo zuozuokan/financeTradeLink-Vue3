@@ -175,10 +175,10 @@ const addToCart = async (row) => {
     if (res.code === 200) {
       ElMessage.success('已添加到购物车');
     } else {
-      ElMessage.error(res.msg || '添加失败');
+      ElMessage.error(res.results || '添加失败');
     }
   } catch (e) {
-    ElMessage.error('添加失败，请稍后再试');
+    ElMessage.error(res.results);
   }
 };
 
