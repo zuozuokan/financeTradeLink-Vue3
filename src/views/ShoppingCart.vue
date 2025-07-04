@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column label="操作" width="100">
           <template #default="scope">
-            <el-button type="text" @click="removeItem(scope.row)">删除</el-button>
+            <el-button type="danger" size="small" @click="removeItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,6 +52,7 @@ import { refreshCartCacheAPI } from '@/api/cart'
 import { ElMessage } from 'element-plus'
 import { purchaseProductAPI } from '@/api/order'
 import { batchRemoveCartItemsAPI } from '@/api/cart'
+import { removeCartItemAPI } from '@/api/cart'
 
 const router = useRouter()
 
@@ -62,11 +63,8 @@ const userUuid = payload.uuid;
 const cartList = ref([]);
 const selected = ref([])
 
-// 登录校验
-onMounted(async () => {
-  if (!localStorage.getItem('token')) {
-    router.push('/login')
-  }
+// 获取购物车列表
+const fetchCartList = async () => {
   const res = await getCartListAPI(userUuid);
   if (res.code === 200 && Array.isArray(res.results)) {
     // 并发获取所有商品详情
@@ -84,6 +82,14 @@ onMounted(async () => {
   } else {
     cartList.value = []
   }
+}
+
+// 登录校验
+onMounted(async () => {
+  if (!localStorage.getItem('token')) {
+    router.push('/login')
+  }
+  await fetchCartList()
 })
 
 function handleSelectionChange(val) {
@@ -94,13 +100,36 @@ function updateQuantity(row) {
   // 可调用API同步数量
 }
 
-function removeItem(row) {
-  cartList.value = cartList.value.filter(item => item.id !== row.id)
+async function removeItem(row) {
+  try {
+    const res = await removeCartItemAPI(row.cartUuid)
+    if (res.code === 200) {
+      ElMessage.success('删除成功')
+      await fetchCartList()
+    } else {
+      ElMessage.error(res.msg || '删除失败')
+    }
+  } catch (e) {
+    console.log(e);
+    ElMessage.error('删除失败，请稍后再试')
+  }
 }
 
-function batchDelete() {
-  cartList.value = cartList.value.filter(item => !selected.value.includes(item))
-  selected.value = []
+async function batchDelete() {
+  try {
+    const cartUuids = selected.value.map(item => item.cartUuid)
+    const res = await batchRemoveCartItemsAPI(cartUuids)
+    if (res.code === 200) {
+      ElMessage.success('批量删除成功')
+      await fetchCartList()
+      selected.value = []
+    } else {
+      ElMessage.error(res.msg || '批量删除失败')
+    }
+  } catch (e) {
+    console.log(e);
+    ElMessage.error('批量删除失败，请稍后再试')
+  }
 }
 
 const totalPrice = computed(() => {

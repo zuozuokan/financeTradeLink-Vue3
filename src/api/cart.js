@@ -23,9 +23,7 @@ export const updateCartItemAPI = ({ cartItemId, quantity }) =>
 
 // 删除购物车中的商品
 export const removeCartItemAPI = (cartItemId) =>
-  request.post('/remove', null, {
-    params: { cartItemId }
-  });
+  request.post('/delete', [cartItemId]);
 
 // 批量删除购物车商品
 export const batchRemoveCartItemsAPI = (cartItemUuids) =>
